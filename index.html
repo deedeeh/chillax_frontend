@@ -10,13 +10,19 @@
 </head>
 <body>
     <div class="header">
-        <h1>Logo here</h1>
-        <p>Signup/login form</p>
+        <h1>Chillax logo</h1>
+        <form id='signup-form'>
+            <input type='text' name='email' placeholder="Your email">
+            <input type='text' name='name' placeholder="Your name">
+            <input type='submit' value='Sign up/login'>
+        </form>
       </div>
       
       <div class="topnav">
-        <a href="#">Search by month</a>
-        <a href="#" style="float:right">Search by price</a>
+        <form id='filter-form'>
+            <input type='text' name='month' placeholder="Filter by month">
+            <input style="float:right" type='number' name='budget' placeholder="Filter by budget">
+        </form>
       </div>
       
       <div class="row">
