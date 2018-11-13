@@ -9,39 +9,55 @@ destinationsURL = "http://localhost:3000/api/v1/destinations"
 commentsURL = "http://localhost:3000/api/v1/comments"
 
 
+const state = {
+    currentUser: undefined,
+    destinations: []
+}
 
-const getUser = id => 
-    fetch(`${usersURL}/${id}`)
-        .then(resp => resp.json())
+//--------------------------------------------------------------------------------------------------------
 
-// --------------------------------------------- 
 
-const getDestination = id =>
-    fetch(`${destinationsURL}/${id}`)
-        .then(resp => resp.json())
+const renderDestination = destination => {
+    destinationEl = document.createElement('div')
+    destinationEl.setAttribute('class','destination-element')
+    destinationEl.setAttribute('data-id', destination.id)
+    destinationEl.innerHTML=`
+      <h2>${destination.title}</h2>
+      <img src="${destination.pictures[0].picture_url}">
+      <p>Recommended budget: £${destination.price}</p>
+      <div class='more-info'></div>
+      <hr>
+    `
+    
+     destinationEl.addEventListener('click', () => {
+        const moreInfoEl = document.querySelector(`div [data-id='${destination.id}'] .more-info`)
+        console.log(moreInfoEl)
+        moreInfoEl.innerHTML = 
+        `<p>${destination.content}</p>`
 
-const getDestinations = () =>
-    fetch(destinationsURL)
-        .then(resp => resp.json())
+        // ${destination.pictures.forEach(pic => `<img src="${pic.picture_url}">`)}  ASK SOMEONE ABOUT THIS
 
-// --------------------------------------------- 
+        destination.pictures.forEach(pic => {
+            moreInfoEl.innerHTML += `<img src="${pic.picture_url}">`
+        })
+        
+     })
 
-const getComment = id =>
-    fetch(`${commentsURL}/${id}`)
-        .then(resp => resp.json())
 
-const getComments = () =>
-    fetch(commentsURL)
-        .then(resp => resp.json())
+    resultList.appendChild(destinationEl)
 
-// --------------------------------------------- 
 
-const getUserDestination =  id =>
-    fetch(`${wishlistURL}/${id}`)
-        .then(resp => resp.json())
 
-const getUserDestinations = () =>
-    fetch(wishlistURL)
-        .then(resp => resp.json())
 
-// --------------------------------------------- 
+}
+
+
+const renderDestinations = destinations => 
+    destinations.forEach(destination => {renderDestination(destination)})
+
+
+
+getDestinations()
+    .then(destinations => {
+        state.destinations = [...destinations]
+        renderDestinations(destinations)})
