@@ -130,14 +130,14 @@ document.addEventListener('click', event => {
     if(event.target.className === 'main-image') {
         const id = event.target.dataset.imgId
         letsFindDestinationByPic(id)
-
         addModal(state.selectedDestination[0])
         addMainImageToModal(state.selectedDestination[0])
     }
 
-    // if(event.target.className === 'close') {
-    //     modal.style.display = "none";
-    // }
+    if(event.target.className === 'close') {
+        const modal = document.querySelector('#myModal')
+        modal.style.display = "none";
+    }
 
     
 
