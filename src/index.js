@@ -3,6 +3,7 @@ const signupName = document.querySelector(`#signup-form [name='name']`)
 const signupEmail = document.querySelector(`#signup-form [name='email']`)
 const monthOrPriceFilter = document.querySelector(`#filter-form [name='month']`)
 const resultList = document.querySelector('#result-list')
+const favouritesList = document.querySelector('.favourites-list')
 // more info element to go into each element appended to the page
 
 const state = {
@@ -31,17 +32,10 @@ const renderDestination = destination => {
       <hr>
     `
 
-    //     // ${destination.pictures.forEach(pic => `<img src="${pic.picture_url}">`)}  ASK SOMEONE ABOUT THIS
-
-    //     destination.pictures.forEach(pic => {
-    //         moreInfoEl.innerHTML += `<img src="${pic.picture_url}">`
-    //     })
-        
-
     resultList.appendChild(destinationEl)
 }
 
-//create a separate modal method and call it in global event listener
+//DINA create a separate modal method and call it in global event listener
 const addModal = destination => {
     const moreInfoEl = document.querySelector(`div [data-id='${destination.id}'] .more-info`)
    
@@ -57,21 +51,12 @@ const addModal = destination => {
     
 } 
     
-    // else {
-    //     picturesDivEl.innerHTML = ""
-    // }
-
-// const addImagesToModal = destination => {
-//     const modal = document.querySelector('#myModal');
-
-//     <div class="row">
-//         <div class="column">
-//             <img src="img_nature.jpg" style="width:100%">
-//         </div>
-//     </div>
-// }
-
-
+// ED find destination by image id
+const letsFindDestinationByPic = (imageId) => {
+    state.selectedDestination = state.destinations.filter(dest => dest.pictures.find(pic=> pic.id == parseInt(imageId)))
+    return state.selectedDestination
+}
+// DINA append Image to Modal
 const addMainImageToModal = destination => {
     // Get the image and insert it inside the modal - use its "alt" text as a caption
     const mainImage = document.querySelector(`img[data-img-id='${destination.pictures[0].id}']`)
@@ -90,10 +75,11 @@ const addMainImageToModal = destination => {
 
 }
 
+
 //external event listeners
 
 
-//filter Eventlistener:
+//ED filter Eventlistener:
 monthOrPriceFilter.addEventListener('keyup', () => {
     resultList.innerHTML=""
     let filteredDestinations = state.destinations.filter(destination => {
@@ -102,7 +88,7 @@ monthOrPriceFilter.addEventListener('keyup', () => {
     renderDestinations(filteredDestinations)
 })
 
-//sign-up form event listener and current user/email assigner:
+//ED sign-up form event listener and current user/email assigner:
 signupForm.addEventListener('submit', event => {
     event.preventDefault()
     state.currentUser = signupName.value
@@ -119,30 +105,7 @@ signupForm.addEventListener('submit', event => {
         }   
 })
 
-//Render Destinations (run upon page load)
-const renderDestinations = destinations => 
-    destinations.forEach(destination => {renderDestination(destination)})
-
-getDestinations()
-    .then(destinations => {
-        state.destinations = [...destinations]
-
-        renderDestinations(destinations)})
-
-const findDestination = id => 
-    state.destinations.find(destination => destination.id === parseInt(id))
-
-// const findDestinationByPic = (destinationId, imageId) => {
-//     state.selectedDestination = findDestination(destinationId)
-//     state.selectedDestination.pictures.find(pic => pic.id === imageId)
-//     return state.selectedDestination
-// }
-
-const letsFindDestinationByPic = (imageId) => {
-    state.selectedDestination = state.destinations.filter(dest => dest.pictures.find(pic=> pic.id == parseInt(imageId)))
-    return state.selectedDestination
-}
-
+//DINA picture event listener
 document.addEventListener('click', event => {
     if(event.target.className === 'main-image') {
         const id = event.target.dataset.imgId
@@ -159,5 +122,64 @@ document.addEventListener('click', event => {
     }
 
 })
-//Retrieves all users from the db to later confirm
+
+
+//ED Render Destinations (run upon page load)
+const renderDestinations = destinations => 
+    destinations.forEach(destination => {renderDestination(destination)})
+
+getDestinations()
+    .then(destinations => {
+        state.destinations = [...destinations]
+
+        renderDestinations(destinations)})
+
+const findDestination = id => 
+    state.destinations.find(destination => destination.id === parseInt(id))
+
+
+
+//ED Retrieves all users from the db to later confirm
 getAllUsers()
+
+
+
+
+
+//----------Useless crap? ------------//
+
+
+// const findDestinationByPic = (destinationId, imageId) => {
+//     state.selectedDestination = findDestination(destinationId)
+//     state.selectedDestination.pictures.find(pic => pic.id === imageId)
+//     return state.selectedDestination
+// }
+
+
+//----------------------------------//
+//after addModal, line 60:
+
+
+    // else {
+    //     picturesDivEl.innerHTML = ""
+    // }
+
+// const addImagesToModal = destination => {
+//     const modal = document.querySelector('#myModal');
+
+//     <div class="row">
+//         <div class="column">
+//             <img src="img_nature.jpg" style="width:100%">
+//         </div>
+//     </div>
+// }
+
+
+//---------in render destination -------//
+
+        // // ${destination.pictures.forEach(pic => `<img src="${pic.picture_url}">`)}  ASK SOMEONE ABOUT THIS
+
+        // destination.pictures.forEach(pic => {
+        //     moreInfoEl.innerHTML += `<img src="${pic.picture_url}">`
+        // })
+        
