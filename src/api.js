@@ -1,3 +1,22 @@
+usersURL = "http://localhost:3000/api/v1/users"
+wishlistURL = "http://localhost:3000/api/v1/user_destinations"
+destinationsURL = "http://localhost:3000/api/v1/destinations"
+commentsURL = "http://localhost:3000/api/v1/comments"
+
+
+// --------------------------------------------
+
+const addUser = (name, email) => {
+    fetch(usersURL, {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({name: name, email: email})
+    }).then(resp => console.log(resp))
+}
+
+
+const getAllUsers = () => 
+fetch(usersURL).then(resp => resp.json()).then(result => state.allUsers = [...result])
 
 const getUser = id => 
 fetch(`${usersURL}/${id}`)

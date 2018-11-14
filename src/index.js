@@ -5,12 +5,6 @@ const monthOrPriceFilter = document.querySelector(`#filter-form [name='month']`)
 const resultList = document.querySelector('#result-list')
 // more info element to go into each element appended to the page
 
-usersURL = "http://localhost:3000/api/v1/users"
-wishlistURL = "http://localhost:3000/api/v1/user_destinations"
-destinationsURL = "http://localhost:3000/api/v1/destinations"
-commentsURL = "http://localhost:3000/api/v1/comments"
-
-
 const state = {
     currentUser: undefined,
     currentUserEmail: undefined,
@@ -47,8 +41,8 @@ const renderDestination = destination => {
     state.renderedDestinations.push(destination)
 }
 
-
 //external event listeners
+
 
 //filter Eventlistener:
 monthOrPriceFilter.addEventListener('keyup', () => {
@@ -66,15 +60,14 @@ signupForm.addEventListener('submit', event => {
     currentUserEmail = signupEmail.value
     console.log(currentUser, currentUserEmail)
     signupForm.innerHTML = ''
-    //checks if the user exists and welcomes accordingly
+    //checks if the user exists . Welcomes and if not, adds to DB
     loggedinUser = state.allUsers.find(user => user.email.toLowerCase() === currentUserEmail.toLowerCase())
-    loggedinUser ? signupForm.innerText = `Welcome back, ${currentUser}` : signupForm.innerText = `Welcome, ${currentUser}`
+    if (loggedinUser) {signupForm.innerText = `Welcome back, ${currentUser}`}
+    else {
+        signupForm.innerText = `Welcome, ${currentUser}`
+        addUser(currentUser, currentUserEmail)
+        }   
 })
-
-const getAllUsers = () => 
-    fetch(usersURL).then(resp => resp.json()).then(result => state.allUsers = [...result])
-
-
 
 //Render Destinations (run upon page load)
 const renderDestinations = destinations => 
