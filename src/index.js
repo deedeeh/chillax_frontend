@@ -59,7 +59,7 @@ const addModal = destination => {
     
 // ED find destination by image id
 const letsFindDestinationByPic = (imageId) => {
-    state.selectedDestination = state.destinations.filter(dest => dest.pictures.find(pic=> pic.id == parseInt(imageId)))
+    state.selectedDestination = state.destinations.find(dest => dest.pictures.find(pic=> pic.id == parseInt(imageId)))
     return state.selectedDestination
 }
 // DINA append Image to Modal
@@ -146,15 +146,23 @@ document.addEventListener('click', event => {
     if(event.target.className === 'main-image') {
         const id = event.target.dataset.imgId
         letsFindDestinationByPic(id)
-        addModal(state.selectedDestination[0])
-        addMainImageToModal(state.selectedDestination[0])
+        addModal(state.selectedDestination)
+        addMainImageToModal(state.selectedDestination)
     }
 
     if(event.target.className === 'close') {
-        const moreInfoEl = document.querySelector(`div [data-id='${state.selectedDestination[0].id}'] .more-info`)
+        const moreInfoEl = document.querySelector(`div [data-id='${state.selectedDestination.id}'] .more-info`)
         const modal = document.querySelector('#myModal')
         modal.style.display = "none"
         moreInfoEl.innerHTML = ''
+    }
+
+    if(event.target.className === 'favourites-item'){
+        const dataId = event.target.dataset.destinationId
+        foundDestination = state.destinations.find(dest=>dest.id==dataId)
+        addModal(foundDestination)
+        state.selectedDestination = foundDestination
+        addMainImageToModal(foundDestination)
     }
 
 })
@@ -166,7 +174,7 @@ const favouritesListRender = () => {
     // shoves them into the inner HTML:
     favouritesList.innerHTML=""
     state.currentUserFavourites.forEach(fav => {
-        favouritesList.innerHTML += `<li>${fav.destination.title}</li>`
+        favouritesList.innerHTML += `<li class="favourites-item" data-destination-id="${fav.destination.id}">${fav.destination.title}</li>`
         console.log(fav.destination.title)
     })    
 }
