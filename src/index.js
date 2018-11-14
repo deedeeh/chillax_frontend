@@ -6,9 +6,6 @@ const resultList = document.querySelector('#result-list')
 const favouritesList = document.querySelector('.favourites-list')
 const showHide = document.querySelector("#show-hide-content")
 
-
-
-// more info element to go into each element appended to the page
 const state = {
     currentUser: undefined,
     destinations: [],
@@ -55,9 +52,80 @@ const addModal = destination => {
         <p class="caption">${destination.content}</p>
         <p class="caption">${destination.price}</p>
         <p class="caption">Recommended months: ${destination.months[0].name}</p>
+        <div class="comment-list"></div>
+        <form class="comment-form">
+            <input name="comment-text" class="caption" placeholer="Add a comment">
+            <input  class="caption" type="submit" value="Add comment">
+        </form>
     </div>`
+
+    // const filteredComments = renderCommentsFromDb(destination)
+    // filteredComments.forEach(comment =>
+    // moreInfoEl.innerHTML += `${comment.content}` )
+
+    const commentList = document.querySelector(`.comment-list`)
+    destination.comments.forEach(comment => commentList.innerHTML += `<p class="caption"> ${findUserById(comment.user_id).name}: ${comment.content}</p><br>`)
     
+    const commentForm = document.querySelector(`.comment-form`)
+
+    commentForm.addEventListener('submit', event => {
+        event.preventDefault()
+        const commentTextField = document.querySelector(`input[name="comment-text"]`)
+        let comment = commentTextField.value
+        commentCreationFunction(destination)
+        commentList.innerHTML += `<p class="caption">${state.currentUser}: ${comment}</p><br>`
+    })
 } 
+
+
+
+const findUserById = id => state.allUsers.find(user => user.id === parseInt(id))
+
+//------------------------------------
+
+
+// const renderCommentsFromDb = (destination) => {
+//     const commentList = document.querySelector(`.comment-list`)
+//     commentList.innerHTML=""
+//     getComments()
+//         .then(comments => {
+//             comments.forEach(comment => 
+//                 comment.destination_id == destination.id ? commentList.innerHTML += comment : "")
+//         })
+
+// }
+
+
+//-----works okay: ----//
+
+const commentCreationFunction = destination => {
+    const commentTextField = document.querySelector(`input[name="comment-text"]`)
+    const commentList = document.querySelector(`.comment-list`)
+    let foundUser = findUserByName(state.currentUser)
+    //front end 
+    let comment = commentTextField.value
+    // let commentEl = document.createElement('p')
+    // commentEl.classList.add('caption')
+    // commentEl.innerText = `${foundUser.name}: ${comment}`
+    // commentList.appendChild(commentEl)
+    //backend
+    let commentObject = {user_id: foundUser.id, destination_id: destination.id, content: comment}
+    createComment(commentObject)
+
+    commentTextField.value = ""
+}
+
+
+
+
+
+
+//--------------------------------------------
+
+
+
+
+
     
 // ED find destination by image id
 const letsFindDestinationByPic = (imageId) => {
@@ -85,7 +153,6 @@ const addMainImageToModal = destination => {
 //DINA find destination by id
 const findDestination = id => 
     state.destinations.find(destination => destination.id === parseInt(id))
-
 
 
 //--------------------------------------------------event listeners----------------------------------------------------------//
@@ -179,7 +246,7 @@ const favouritesListRender = () => {
     })    
 }
 
-
+const findUserByName = name => state.allUsers.find(user => user.name === name)
 
 
 //ED Render Destinations (run upon page load)
