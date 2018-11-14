@@ -1,18 +1,16 @@
 const signupForm = document.querySelector('#signup-form')
-const filterForm = document.querySelector('#filter-form')
+const signupName = document.querySelector(`#signup-form [name='name']`)
+const signupEmail = document.querySelector(`#signup-form [name='email']`)
+const monthOrPriceFilter = document.querySelector(`#filter-form [name='month']`)
 const resultList = document.querySelector('#result-list')
 // more info element to go into each element appended to the page
-
-usersURL = "http://localhost:3000/api/v1/users"
-wishlistURL = "http://localhost:3000/api/v1/user_destinations"
-destinationsURL = "http://localhost:3000/api/v1/destinations"
-commentsURL = "http://localhost:3000/api/v1/comments"
-
 
 const state = {
     currentUser: undefined,
     destinations: [],
-    selectedDestination: undefined
+    selectedDestination: undefined,
+    currentUserEmail: undefined
+
 }
 
 //--------------------------------------------------------------------------------------------------------
@@ -24,7 +22,10 @@ const renderDestination = destination => {
     destinationEl.setAttribute('data-id', destination.id)
     destinationEl.innerHTML=`
       <h2>${destination.title}</h2>
+
       <img class='main-image' id='myImg' data-img-id='${destination.pictures[0].id}' src="${destination.pictures[0].picture_url}">
+      <img src="${destination.pictures[0].picture_url}">
+      <p>Recommended months: ${destination.months[0].name}</p>
       <p>Recommended budget: £${destination.price}</p>
       <div class='more-info'></div>
       <hr>
@@ -37,9 +38,7 @@ const renderDestination = destination => {
     //     })
         
 
-
     resultList.appendChild(destinationEl)
-
 }
 
 //create a separate modal method and call it in global event listener
@@ -88,17 +87,46 @@ const addMainImageToModal = destination => {
     destination.pictures.forEach(pic => {
         picturesDivEl.innerHTML += `<img class="modal-content" src="${pic.picture_url}">`
     })
+
 }
 
+//external event listeners
 
+
+//filter Eventlistener:
+monthOrPriceFilter.addEventListener('keyup', () => {
+    resultList.innerHTML=""
+    let filteredDestinations = state.destinations.filter(destination => {
+        return destination.months[0].name.toLowerCase().includes(monthOrPriceFilter.value.toLowerCase()) || parseInt(destination.price) <= parseInt(monthOrPriceFilter.value)
+    })
+    renderDestinations(filteredDestinations)
+})
+
+//sign-up form event listener and current user/email assigner:
+signupForm.addEventListener('submit', event => {
+    event.preventDefault()
+    state.currentUser = signupName.value
+    state.currentUserEmail = signupEmail.value
+    console.log(state.currentUser, state.currentUserEmail)
+    signupForm.innerHTML = ''
+    //checks if the user exists . Welcomes and if not, adds to DB
+    loggedinUser = state.allUsers.find(user => user.email.toLowerCase() === state.currentUserEmail.toLowerCase())
+
+    if (loggedinUser) {signupForm.innerText = `Welcome back, ${state.currentUser}`}
+    else {
+        signupForm.innerText = `Welcome, ${state.currentUser}`
+        addUser(state.currentUser, state.currentUserEmail)
+        }   
+})
+
+//Render Destinations (run upon page load)
 const renderDestinations = destinations => 
     destinations.forEach(destination => {renderDestination(destination)})
-
-
 
 getDestinations()
     .then(destinations => {
         state.destinations = [...destinations]
+
         renderDestinations(destinations)})
 
 const findDestination = id => 
@@ -131,3 +159,5 @@ document.addEventListener('click', event => {
     }
 
 })
+//Retrieves all users from the db to later confirm
+getAllUsers()
