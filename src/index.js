@@ -30,38 +30,12 @@ const renderDestination = destination => {
       <hr>
     `
 
-    // imageEl = destinationEl.querySelector('img')
-    //  imageEl.addEventListener('click', () => {
-    //     const moreInfoEl = document.querySelector(`div [data-id='${destination.id}'] .more-info`)
-    //     const mainImage = document.querySelector(`img[data-img-id='${destination.pictures[0].id}']`)
-    //     moreInfoEl.innerHTML = 
-    //     `<div id="myModal" class="modal">
-    //         <span class="close">&times;</span>
-    //         <img class="modal-content" id="img01">
-    //     </div>
-    //     <p>${destination.content}</p>`
-
-    //     // Get the image and insert it inside the modal - use its "alt" text as a caption
-    //         const modal = document.querySelector('#myModal');
-    //         // const img = document.querySelector('#myImg');
-    //         const modalImg = document.querySelector("#img01");
-    //         modal.style.display = "block";
-    //         modalImg.setAttribute('src', `${mainImage.src}`);
-            
-
     //     // ${destination.pictures.forEach(pic => `<img src="${pic.picture_url}">`)}  ASK SOMEONE ABOUT THIS
 
     //     destination.pictures.forEach(pic => {
     //         moreInfoEl.innerHTML += `<img src="${pic.picture_url}">`
     //     })
-
-    //     const span = document.querySelector(".close");
-    //     span.addEventListener('click', () =>  {
-    //         modal.style.display = "none";
-    //         console.log('closed')
-    //     })
         
-    //  })
 
 
     resultList.appendChild(destinationEl)
@@ -71,31 +45,50 @@ const renderDestination = destination => {
 //create a separate modal method and call it in global event listener
 const addModal = destination => {
     const moreInfoEl = document.querySelector(`div [data-id='${destination.id}'] .more-info`)
+   
     moreInfoEl.innerHTML = 
     `<div id="myModal" class="modal">
         <span class="close">&times;</span>
         <img class="modal-content" id="img01">
-    </div>
-    <p>${destination.content}</p>`
-
+        <div class="all-pictures"></div>
+        <p class="caption">${destination.content}</p>
+        <p class="caption">${destination.price}</p>
+        <p class="caption">Recommended months: ${destination.months[0].name}</p>
+    </div>`
     
-}
+} 
+    
+    // else {
+    //     picturesDivEl.innerHTML = ""
+    // }
+
+// const addImagesToModal = destination => {
+//     const modal = document.querySelector('#myModal');
+
+//     <div class="row">
+//         <div class="column">
+//             <img src="img_nature.jpg" style="width:100%">
+//         </div>
+//     </div>
+// }
+
 
 const addMainImageToModal = destination => {
     // Get the image and insert it inside the modal - use its "alt" text as a caption
     const mainImage = document.querySelector(`img[data-img-id='${destination.pictures[0].id}']`)
+    console.log(mainImage)
     const modal = document.querySelector('#myModal');
     const modalImg = document.querySelector("#img01");
     modal.style.display = "block";
     modalImg.setAttribute('src', `${mainImage.src}`);
-}
 
-// const closeModal = () => {
-//     const span = document.querySelector(".close");
-//     span.addEventListener('click', () =>  {
-//         modal.style.display = "none";
-//     })
-// }
+    const moreInfoEl = document.querySelector(`div [data-id='${destination.id}'] .more-info`)
+    const picturesDivEl = moreInfoEl.querySelector('.all-pictures')
+
+    destination.pictures.forEach(pic => {
+        picturesDivEl.innerHTML += `<img class="modal-content" src="${pic.picture_url}">`
+    })
+}
 
 
 const renderDestinations = destinations => 
@@ -111,20 +104,16 @@ getDestinations()
 const findDestination = id => 
     state.destinations.find(destination => destination.id === parseInt(id))
 
-const findDestinationByPic = (destinationId, imageId) => {
-    state.selectedDestination = findDestination(destinationId)
-    state.selectedDestination.pictures.find(pic => pic.id === imageId)
-    return state.selectedDestination
-}
+// const findDestinationByPic = (destinationId, imageId) => {
+//     state.selectedDestination = findDestination(destinationId)
+//     state.selectedDestination.pictures.find(pic => pic.id === imageId)
+//     return state.selectedDestination
+// }
 
 const letsFindDestinationByPic = (imageId) => {
     state.selectedDestination = state.destinations.filter(dest => dest.pictures.find(pic=> pic.id == parseInt(imageId)))
     return state.selectedDestination
 }
-    // state.selectedDestination = findDestination(destinationId)
-    // state.selectedDestination.pictures.find(pic => pic.id === imageId)
-    // return state.selectedDestination
-
 
 document.addEventListener('click', event => {
     if(event.target.className === 'main-image') {
@@ -135,11 +124,10 @@ document.addEventListener('click', event => {
     }
 
     if(event.target.className === 'close') {
+        const moreInfoEl = document.querySelector(`div [data-id='${state.selectedDestination[0].id}'] .more-info`)
         const modal = document.querySelector('#myModal')
-        modal.style.display = "none";
+        modal.style.display = "none"
+        moreInfoEl.innerHTML = ''
     }
-
-    
-
 
 })
