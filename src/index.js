@@ -8,11 +8,13 @@ const favouritesList = document.querySelector('.favourites-list')
 
 const state = {
     currentUser: undefined,
+
     destinations: [],
     selectedDestination: undefined,
     currentUserEmail: undefined,
     allUserDestinations: [],
-    currentUserFavourites: []
+    currentUserFavourites: [],
+    allUsers: []
 }
 
 //-------------------------------functions-------------------------------------------------------------------------//
@@ -29,10 +31,13 @@ const renderDestination = destination => {
 
       <p>Recommended months: ${destination.months[0].name}</p>
       <p>Recommended budget: £${destination.price}</p>
+      <button class='add-favourite'>Add to favourites</button>
       <div class='more-info'></div>
       <hr>
     `
 
+    addFavouriteButton = destinationEl.querySelector('.add-favourite')
+    addFavouriteButton.addEventListener('click', () =>  addDestinationToFavourites( state.currentUserEmail, destination.title) )
     resultList.appendChild(destinationEl)
 }
 
@@ -102,7 +107,6 @@ signupForm.addEventListener('submit', event => {
     signupForm.innerHTML = ''
     //checks if the user exists . Welcomes and if not, adds to DB
     loggedinUser = state.allUsers.find(user => user.email.toLowerCase() === state.currentUserEmail.toLowerCase())
-
     if (loggedinUser){
         signupForm.innerText = `Welcome back, ${state.currentUser}`
         favouritesListRender()
@@ -110,8 +114,33 @@ signupForm.addEventListener('submit', event => {
     else {
         signupForm.innerText = `Welcome, ${state.currentUser}`
         addUser(state.currentUser, state.currentUserEmail)
-        }   
+            .then(getAllUsers)
+    }
 })
+
+
+
+
+const addDestinationToFavourites = (userEmail, destinationName) => {
+    foundDestination = state.destinations.find(dest=> dest.title === destinationName)
+    console.log('found the destination:', foundDestination)
+
+    foundUser = state.allUsers.find(user => user.email === userEmail)
+    console.log('found the user. this is before the post request: ',foundUser)
+
+    fetch(wishlistURL, {
+        method: "POST",
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({user_id: foundUser.id, destination_id: foundDestination.id})
+    })
+
+    favouritesList.innerHTML=""
+    favouritesListRender(state.currentUser)
+}
+
+
+
+
 
 //DINA picture event listener
 document.addEventListener('click', event => {
