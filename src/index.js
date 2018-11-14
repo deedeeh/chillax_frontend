@@ -56,16 +56,17 @@ monthOrPriceFilter.addEventListener('keyup', () => {
 //sign-up form event listener and current user/email assigner:
 signupForm.addEventListener('submit', event => {
     event.preventDefault()
-    currentUser = signupName.value
-    currentUserEmail = signupEmail.value
-    console.log(currentUser, currentUserEmail)
+    state.currentUser = signupName.value
+    state.currentUserEmail = signupEmail.value
+    console.log(state.currentUser, state.currentUserEmail)
     signupForm.innerHTML = ''
     //checks if the user exists . Welcomes and if not, adds to DB
-    loggedinUser = state.allUsers.find(user => user.email.toLowerCase() === currentUserEmail.toLowerCase())
-    if (loggedinUser) {signupForm.innerText = `Welcome back, ${currentUser}`}
+    loggedinUser = state.allUsers.find(user => user.email.toLowerCase() === state.currentUserEmail.toLowerCase())
+
+    if (loggedinUser) {signupForm.innerText = `Welcome back, ${state.currentUser}`}
     else {
-        signupForm.innerText = `Welcome, ${currentUser}`
-        addUser(currentUser, currentUserEmail)
+        signupForm.innerText = `Welcome, ${state.currentUser}`
+        addUser(state.currentUser, state.currentUserEmail)
         }   
 })
 
