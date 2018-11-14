@@ -50,6 +50,7 @@ const renderDestination = destination => {
 
 //external event listeners
 
+//filter Eventlistener:
 monthOrPriceFilter.addEventListener('keyup', () => {
     resultList.innerHTML=""
     let filteredDestinations = state.destinations.filter(destination => {
@@ -58,13 +59,20 @@ monthOrPriceFilter.addEventListener('keyup', () => {
     renderDestinations(filteredDestinations)
 })
 
-
+//sign-up form event listener and current user/email assigner:
 signupForm.addEventListener('submit', event => {
     event.preventDefault()
     currentUser = signupName.value
     currentUserEmail = signupEmail.value
     console.log(currentUser, currentUserEmail)
+    signupForm.innerHTML = ''
+    //checks if the user exists and welcomes accordingly
+    loggedinUser = state.allUsers.find(user => user.email.toLowerCase() === currentUserEmail.toLowerCase())
+    loggedinUser ? signupForm.innerText = `Welcome back, ${currentUser}` : signupForm.innerText = `Welcome, ${currentUser}`
 })
+
+const getAllUsers = () => 
+    fetch(usersURL).then(resp => resp.json()).then(result => state.allUsers = [...result])
 
 
 
@@ -77,3 +85,6 @@ getDestinations()
         state.destinations = [...destinations]
         state.renderedDestinations = [...destinations]
         renderDestinations(destinations)})
+
+//Retrieves all users from the db to later confirm
+getAllUsers()
