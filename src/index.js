@@ -10,11 +10,12 @@ const state = {
     currentUser: undefined,
     destinations: [],
     selectedDestination: undefined,
-    currentUserEmail: undefined
-
+    currentUserEmail: undefined,
+    allUserDestinations: [],
+    currentUserFavourites: []
 }
 
-//--------------------------------------------------------------------------------------------------------
+//-------------------------------functions-------------------------------------------------------------------------//
 
 
 const renderDestination = destination => {
@@ -74,9 +75,13 @@ const addMainImageToModal = destination => {
     })
 
 }
+//DINA find destination by id
+const findDestination = id => 
+    state.destinations.find(destination => destination.id === parseInt(id))
 
 
-//external event listeners
+
+//--------------------------------------------------event listeners----------------------------------------------------------//
 
 
 //ED filter Eventlistener:
@@ -98,7 +103,10 @@ signupForm.addEventListener('submit', event => {
     //checks if the user exists . Welcomes and if not, adds to DB
     loggedinUser = state.allUsers.find(user => user.email.toLowerCase() === state.currentUserEmail.toLowerCase())
 
-    if (loggedinUser) {signupForm.innerText = `Welcome back, ${state.currentUser}`}
+    if (loggedinUser){
+        signupForm.innerText = `Welcome back, ${state.currentUser}`
+        favouritesListRender()
+    }
     else {
         signupForm.innerText = `Welcome, ${state.currentUser}`
         addUser(state.currentUser, state.currentUserEmail)
@@ -123,6 +131,22 @@ document.addEventListener('click', event => {
 
 })
 
+//argument - currentUser to show all the user's favourites
+const favouritesListRender = (loggedInUser) => {
+    //filters only current user's favs:
+    state.currentUserFavourites = state.allUserDestinations.filter(fav => fav.user.email.toLowerCase() === state.currentUserEmail.toLowerCase())
+    // shoves them into the inner HTML:
+    state.currentUserFavourites.forEach(fav => {
+        favouritesList.innerHTML += `<li>${fav.destination.title}</li>`
+        console.log(fav.destination.title)
+    })
+
+    
+}
+
+
+
+
 
 //ED Render Destinations (run upon page load)
 const renderDestinations = destinations => 
@@ -131,16 +155,19 @@ const renderDestinations = destinations =>
 getDestinations()
     .then(destinations => {
         state.destinations = [...destinations]
-
         renderDestinations(destinations)})
 
-const findDestination = id => 
-    state.destinations.find(destination => destination.id === parseInt(id))
+
 
 
 
 //ED Retrieves all users from the db to later confirm
 getAllUsers()
+getUserDestinations().then(resp => state.allUserDestinations = [...resp])
+
+
+
+
 
 
 

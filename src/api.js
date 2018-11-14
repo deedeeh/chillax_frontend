@@ -51,3 +51,4 @@ fetch(`${wishlistURL}/${id}`)
 const getUserDestinations = () =>
 fetch(wishlistURL)
     .then(resp => resp.json())
+   
