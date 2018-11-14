@@ -1,4 +1,6 @@
 const signupForm = document.querySelector('#signup-form')
+const signupName = document.querySelector(`#signup-form [name='name']`)
+const signupEmail = document.querySelector(`#signup-form [name='email']`)
 const monthOrPriceFilter = document.querySelector(`#filter-form [name='month']`)
 const resultList = document.querySelector('#result-list')
 // more info element to go into each element appended to the page
@@ -11,7 +13,8 @@ commentsURL = "http://localhost:3000/api/v1/comments"
 
 const state = {
     currentUser: undefined,
-    destinations: [],
+    currentUserEmail: undefined,
+    destinations: []
 }
 
 //--------------------------------------------------------------------------------------------------------
@@ -29,25 +32,20 @@ const renderDestination = destination => {
       <div class='more-info'></div>
       <hr>
     `
-    
      destinationEl.addEventListener('click', () => {
         const moreInfoEl = document.querySelector(`div [data-id='${destination.id}'] .more-info`)
         
         moreInfoEl.innerHTML = 
         `<p>${destination.content}</p>`
-
         // ${destination.pictures.forEach(pic => `<img src="${pic.picture_url}">`)}  ASK SOMEONE ABOUT THIS
-
         destination.pictures.forEach(pic => {
             moreInfoEl.innerHTML += `<img src="${pic.picture_url}">`
-        })
-        
+        }) 
      })
 
     resultList.appendChild(destinationEl)
     state.renderedDestinations.push(destination)
 }
-
 
 
 //external event listeners
@@ -60,11 +58,13 @@ monthOrPriceFilter.addEventListener('keyup', () => {
     renderDestinations(filteredDestinations)
 })
 
-// replace title with month name (remove the month model? we have a string now instead of one_to_many relationship)
-// add months worth flying to description in innerHTML of show of each page
 
-
-
+signupForm.addEventListener('submit', event => {
+    event.preventDefault()
+    currentUser = signupName.value
+    currentUserEmail = signupEmail.value
+    console.log(currentUser, currentUserEmail)
+})
 
 
 
