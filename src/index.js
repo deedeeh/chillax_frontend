@@ -4,6 +4,7 @@ const signupEmail = document.querySelector(`#signup-form [name='email']`)
 const monthOrPriceFilter = document.querySelector(`#filter-form [name='month']`)
 const resultList = document.querySelector('#result-list')
 const favouritesList = document.querySelector('.favourites-list')
+const showHide = document.querySelector("#show-hide-content")
 // more info element to go into each element appended to the page
 
 const state = {
@@ -119,8 +120,7 @@ signupForm.addEventListener('submit', event => {
 })
 
 
-
-
+// Both - add destination to userDestinations
 const addDestinationToFavourites = (userEmail, destinationName) => {
     foundDestination = state.destinations.find(dest=> dest.title === destinationName)
     console.log('found the destination:', foundDestination)
@@ -132,31 +132,20 @@ const addDestinationToFavourites = (userEmail, destinationName) => {
         .then(getUserDestinations)
         .then(userDestinations => {
             state.allUserDestinations = [...userDestinations]
-            favouritesListRender()})
-
-    
+            favouritesListRender()})    
 }
-
-
-
 
 
 //DINA picture event listener
 document.addEventListener('click', event => {
+    // click on the main image
     if(event.target.className === 'main-image') {
         const id = event.target.dataset.imgId
         letsFindDestinationByPic(id)
         addModal(state.selectedDestination)
         addMainImageToModal(state.selectedDestination)
     }
-
-    if(event.target.className === 'close') {
-        const moreInfoEl = document.querySelector(`div [data-id='${state.selectedDestination.id}'] .more-info`)
-        const modal = document.querySelector('#myModal')
-        modal.style.display = "none"
-        moreInfoEl.innerHTML = ''
-    }
-
+    // ED click on the favorite list item 
     if(event.target.className === 'favourites-item'){
         const dataId = event.target.dataset.destinationId
         foundDestination = state.destinations.find(dest=>dest.id==dataId)
@@ -164,7 +153,15 @@ document.addEventListener('click', event => {
         state.selectedDestination = foundDestination
         addMainImageToModal(foundDestination)
     }
+    // click on the X 
+    if(event.target.className === 'close') {
+        const moreInfoEl = document.querySelector(`div [data-id='${state.selectedDestination.id}'] .more-info`)
+        const modal = document.querySelector('#myModal')
+        modal.style.display = "none"
+        moreInfoEl.innerHTML = ''
+    }
 
+    
 })
 
 //argument - currentUser to show all the user's favourites
@@ -190,8 +187,6 @@ getDestinations()
     .then(destinations => {
         state.destinations = [...destinations]
         renderDestinations(destinations)})
-
-
 
 
 
