@@ -14,7 +14,6 @@ const addUser = (name, email) => {
     })
 }
 
-
 const getAllUsers = () => 
 fetch(usersURL)
     .then(resp => resp.json())
@@ -33,6 +32,7 @@ fetch(`${destinationsURL}/${id}`)
 const getDestinations = () =>
 fetch(destinationsURL)
     .then(resp => resp.json())
+
 
 // --------------------------------------------- 
 
@@ -55,3 +55,8 @@ fetch(wishlistURL)
     .then(resp => resp.json())
 
 
+const postUserDestination = (foundUser_id, foundDestination_id) =>          fetch(wishlistURL, {
+        method: "POST",
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({user_id: foundUser_id, destination_id: foundDestination_id})
+})

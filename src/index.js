@@ -128,14 +128,13 @@ const addDestinationToFavourites = (userEmail, destinationName) => {
     foundUser = state.allUsers.find(user => user.email === userEmail)
     console.log('found the user. this is before the post request: ',foundUser)
 
-    fetch(wishlistURL, {
-        method: "POST",
-        headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify({user_id: foundUser.id, destination_id: foundDestination.id})
-    })
+    postUserDestination(foundUser.id, foundDestination.id)
+        .then(getUserDestinations)
+        .then(userDestinations => {
+            state.allUserDestinations = [...userDestinations]
+            favouritesListRender()})
 
-    favouritesList.innerHTML=""
-    favouritesListRender(state.currentUser)
+    
 }
 
 
@@ -161,18 +160,16 @@ document.addEventListener('click', event => {
 })
 
 //argument - currentUser to show all the user's favourites
-const favouritesListRender = (loggedInUser) => {
+const favouritesListRender = () => {
     //filters only current user's favs:
     state.currentUserFavourites = state.allUserDestinations.filter(fav => fav.user.email.toLowerCase() === state.currentUserEmail.toLowerCase())
     // shoves them into the inner HTML:
+    favouritesList.innerHTML=""
     state.currentUserFavourites.forEach(fav => {
         favouritesList.innerHTML += `<li>${fav.destination.title}</li>`
         console.log(fav.destination.title)
-    })
-
-    
+    })    
 }
-
 
 
 
