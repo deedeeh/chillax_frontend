@@ -11,7 +11,8 @@ commentsURL = "http://localhost:3000/api/v1/comments"
 
 const state = {
     currentUser: undefined,
-    destinations: []
+    destinations: [],
+    selectedDestination: undefined
 }
 
 //--------------------------------------------------------------------------------------------------------
@@ -23,33 +24,78 @@ const renderDestination = destination => {
     destinationEl.setAttribute('data-id', destination.id)
     destinationEl.innerHTML=`
       <h2>${destination.title}</h2>
-      <img src="${destination.pictures[0].picture_url}">
+      <img class='main-image' id='myImg' data-img-id='${destination.pictures[0].id}' src="${destination.pictures[0].picture_url}">
       <p>Recommended budget: £${destination.price}</p>
       <div class='more-info'></div>
       <hr>
     `
-    
-     destinationEl.addEventListener('click', () => {
-        const moreInfoEl = document.querySelector(`div [data-id='${destination.id}'] .more-info`)
-        console.log(moreInfoEl)
-        moreInfoEl.innerHTML = 
-        `<p>${destination.content}</p>`
 
-        // ${destination.pictures.forEach(pic => `<img src="${pic.picture_url}">`)}  ASK SOMEONE ABOUT THIS
+    // imageEl = destinationEl.querySelector('img')
+    //  imageEl.addEventListener('click', () => {
+    //     const moreInfoEl = document.querySelector(`div [data-id='${destination.id}'] .more-info`)
+    //     const mainImage = document.querySelector(`img[data-img-id='${destination.pictures[0].id}']`)
+    //     moreInfoEl.innerHTML = 
+    //     `<div id="myModal" class="modal">
+    //         <span class="close">&times;</span>
+    //         <img class="modal-content" id="img01">
+    //     </div>
+    //     <p>${destination.content}</p>`
 
-        destination.pictures.forEach(pic => {
-            moreInfoEl.innerHTML += `<img src="${pic.picture_url}">`
-        })
+    //     // Get the image and insert it inside the modal - use its "alt" text as a caption
+    //         const modal = document.querySelector('#myModal');
+    //         // const img = document.querySelector('#myImg');
+    //         const modalImg = document.querySelector("#img01");
+    //         modal.style.display = "block";
+    //         modalImg.setAttribute('src', `${mainImage.src}`);
+            
+
+    //     // ${destination.pictures.forEach(pic => `<img src="${pic.picture_url}">`)}  ASK SOMEONE ABOUT THIS
+
+    //     destination.pictures.forEach(pic => {
+    //         moreInfoEl.innerHTML += `<img src="${pic.picture_url}">`
+    //     })
+
+    //     const span = document.querySelector(".close");
+    //     span.addEventListener('click', () =>  {
+    //         modal.style.display = "none";
+    //         console.log('closed')
+    //     })
         
-     })
+    //  })
 
 
     resultList.appendChild(destinationEl)
 
-
-
-
 }
+
+//create a separate modal method and call it in global event listener
+const addModal = destination => {
+    const moreInfoEl = document.querySelector(`div [data-id='${destination.id}'] .more-info`)
+    moreInfoEl.innerHTML = 
+    `<div id="myModal" class="modal">
+        <span class="close">&times;</span>
+        <img class="modal-content" id="img01">
+    </div>
+    <p>${destination.content}</p>`
+
+    
+}
+
+const addMainImageToModal = destination => {
+    // Get the image and insert it inside the modal - use its "alt" text as a caption
+    const mainImage = document.querySelector(`img[data-img-id='${destination.pictures[0].id}']`)
+    const modal = document.querySelector('#myModal');
+    const modalImg = document.querySelector("#img01");
+    modal.style.display = "block";
+    modalImg.setAttribute('src', `${mainImage.src}`);
+}
+
+// const closeModal = () => {
+//     const span = document.querySelector(".close");
+//     span.addEventListener('click', () =>  {
+//         modal.style.display = "none";
+//     })
+// }
 
 
 const renderDestinations = destinations => 
@@ -61,3 +107,39 @@ getDestinations()
     .then(destinations => {
         state.destinations = [...destinations]
         renderDestinations(destinations)})
+
+const findDestination = id => 
+    state.destinations.find(destination => destination.id === parseInt(id))
+
+const findDestinationByPic = (destinationId, imageId) => {
+    state.selectedDestination = findDestination(destinationId)
+    state.selectedDestination.pictures.find(pic => pic.id === imageId)
+    return state.selectedDestination
+}
+
+const letsFindDestinationByPic = (imageId) => {
+    state.selectedDestination = state.destinations.filter(dest => dest.pictures.find(pic=> pic.id == parseInt(imageId)))
+    return state.selectedDestination
+}
+    // state.selectedDestination = findDestination(destinationId)
+    // state.selectedDestination.pictures.find(pic => pic.id === imageId)
+    // return state.selectedDestination
+
+
+document.addEventListener('click', event => {
+    if(event.target.className === 'main-image') {
+        const id = event.target.dataset.imgId
+        letsFindDestinationByPic(id)
+
+        addModal(state.selectedDestination[0])
+        addMainImageToModal(state.selectedDestination[0])
+    }
+
+    // if(event.target.className === 'close') {
+    //     modal.style.display = "none";
+    // }
+
+    
+
+
+})
