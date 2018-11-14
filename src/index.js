@@ -24,7 +24,7 @@ const renderDestination = destination => {
       <h2>${destination.title}</h2>
 
       <img class='main-image' id='myImg' data-img-id='${destination.pictures[0].id}' src="${destination.pictures[0].picture_url}">
-      <img src="${destination.pictures[0].picture_url}">
+
       <p>Recommended months: ${destination.months[0].name}</p>
       <p>Recommended budget: £${destination.price}</p>
       <div class='more-info'></div>
