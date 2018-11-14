@@ -5,11 +5,12 @@ const monthOrPriceFilter = document.querySelector(`#filter-form [name='month']`)
 const resultList = document.querySelector('#result-list')
 const favouritesList = document.querySelector('.favourites-list')
 const showHide = document.querySelector("#show-hide-content")
-// more info element to go into each element appended to the page
 
+
+
+// more info element to go into each element appended to the page
 const state = {
     currentUser: undefined,
-
     destinations: [],
     selectedDestination: undefined,
     currentUserEmail: undefined,
@@ -117,6 +118,8 @@ signupForm.addEventListener('submit', event => {
         addUser(state.currentUser, state.currentUserEmail)
             .then(getAllUsers)
     }
+    // allow viewing entire page
+    showHide.style.display="block"
 })
 
 
@@ -188,14 +191,12 @@ getDestinations()
         state.destinations = [...destinations]
         renderDestinations(destinations)})
 
-
-
 //ED Retrieves all users from the db to later confirm
 getAllUsers()
 getUserDestinations().then(resp => state.allUserDestinations = [...resp])
 
-
-
+// hides data on page except footer and login
+showHide.style.display="none"
 
 
 
