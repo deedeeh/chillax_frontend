@@ -77,7 +77,7 @@ const addModal = destination => {
     destination.comments.forEach(comment => {
         let commentUser = findUserById(comment.user_id)
         addCommentToPage(comment, commentList, commentUser)
-        const commentItem = document.querySelector(`li[data-comment-id="${comment.id}"]`)
+        const commentItem = document.querySelector(`div[div-comment-id="${comment.id}"]`)
         if(comment.user_id === state.currentUserObject.id) {
             appendDeleteButton(commentItem, comment.id)
         } 
@@ -89,21 +89,26 @@ const addModal = destination => {
         commentCreationFunction(destination)
              .then(resp => {
                  addCommentToPage(state.returnedComment, commentList, state.currentUserObject)
-                state.selectedDestination.comments.push(state.returnedComment)
+                 state.selectedDestination.comments.push(state.returnedComment)
              })
              .then(resp => {
                  let lastComment = document.querySelector('.comment-list').lastElementChild
                  appendDeleteButton(lastComment, state.returnedComment.id)
-                })
+                }).then(getDestinations)
+                .then(destinations => {
+                    state.destinations = [...destinations]
+                    renderDestinations(destinations)})
                 
-           
+   
     })
+
 } 
 
 
 const addCommentToPage = (commentObject, commentList, userObject) => {
     console.log(commentObject)
     let commentEl = document.createElement('div')
+    commentEl.setAttribute('div-comment-id',commentObject.id)
     let commentUser = userObject
     if (userObject === undefined){ commentUser = state.currentUserObject}
     console.log("found the guy" , commentUser)
@@ -127,6 +132,7 @@ const appendDeleteButton = (commentItem, comment_id) => {
             const commentDeleteButton = document.createElement('button')
             commentDeleteButton.setAttribute('data-comment-id',comment_id)
             commentDeleteButton.classList.add('delete-btn')
+            // commentDeleteButton.style.
             commentDeleteButton.innerText = "Delete me"
             commentDeleteButton.addEventListener('click', ()=>{
                 deleteButtonFunctionality
@@ -141,9 +147,8 @@ const deleteCommentFromLocal = id => {
 }
 
 
-
-
 const deleteButtonFunctionality = () =>{
+    console.log('creating delete button')
     const deleteBtnId = event.target.dataset.commentId
     const commentItem = document.querySelector(`li[data-comment-id="${deleteBtnId}"]`)
     commentItem.remove()
@@ -153,3 +158,5 @@ const deleteButtonFunctionality = () =>{
     deleteCommentFromLocal(deleteBtnId)
     console.log('deleted from locals')
 }
+
+
