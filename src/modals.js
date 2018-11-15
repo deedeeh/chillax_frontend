@@ -45,14 +45,7 @@ document.addEventListener('click', event => {
     }
 
     if(event.target.classList.value === 'delete-btn') {
-        const deleteBtnId = event.target.dataset.commentId
-        const commentItem = document.querySelector(`li[data-comment-id="${deleteBtnId}"]`)
-        commentItem.remove()
-        console.log('deleted from page')
-        deleteComment(deleteBtnId)
-        console.log('deleted from db')
-        deleteCommentFromLocal(deleteBtnId)
-        console.log('deleted from locals')
+        deleteButtonFunctionality()
     }
     
 })
@@ -97,7 +90,8 @@ const addModal = destination => {
              .then(resp => {
                  addCommentToPage(state.returnedComment, commentList, state.currentUserObject)
                 state.selectedDestination.comments.push(state.returnedComment)
-             }).then(resp => {
+             })
+             .then(resp => {
                  let lastComment = document.querySelector('.comment-list').lastElementChild
                  appendDeleteButton(lastComment, state.returnedComment.id)
                 })
@@ -134,10 +128,28 @@ const appendDeleteButton = (commentItem, comment_id) => {
             commentDeleteButton.setAttribute('data-comment-id',comment_id)
             commentDeleteButton.classList.add('delete-btn')
             commentDeleteButton.innerText = "Delete me"
+            commentDeleteButton.addEventListener('click', ()=>{
+                deleteButtonFunctionality
+                commentDeleteButton.remove()
+            })
             commentItem.appendChild(commentDeleteButton)
 }
 
 const deleteCommentFromLocal = id => {
     state.destinations = state.destinations.filter(destination => destination.comments.filter(comment => comment.id != id))
     state.selectedDestination.comments = state.selectedDestination.comments.filter(comment => comment.id != id)
+}
+
+
+
+
+const deleteButtonFunctionality = () =>{
+    const deleteBtnId = event.target.dataset.commentId
+    const commentItem = document.querySelector(`li[data-comment-id="${deleteBtnId}"]`)
+    commentItem.remove()
+    console.log('deleted from page')
+    deleteComment(deleteBtnId)
+    console.log('deleted from db')
+    deleteCommentFromLocal(deleteBtnId)
+    console.log('deleted from locals')
 }
