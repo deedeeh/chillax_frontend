@@ -14,7 +14,8 @@ const state = {
     currentUserEmail: undefined,
     allUserDestinations: [],
     currentUserFavourites: [],
-    allUsers: []
+    allUsers: [],
+    returnedComment: undefined
 }
 
 
@@ -54,14 +55,17 @@ const renderDestination = destination => {
 
 
 
-const commentCreationFunction = destination => {
-    const commentTextField = document.querySelector(`input[name="comment-text"]`)
-    let foundUser = findUserByName(state.currentUser)
-    let comment = commentTextField.value
-    let commentObject = {user_id: foundUser.id, destination_id: destination.id, content: comment}
-    createComment(commentObject)
-    commentTextField.value = ""
-}
+// const commentCreationFunction = destination => {
+//     const commentTextField = document.querySelector(`input[name="comment-text"]`)
+//     let foundUser = findUserByName(state.currentUser)
+//     let comment = commentTextField.value
+//     let commentObject = {user_id: foundUser.id, destination_id: destination.id, content: comment}
+//     commentTextField.value = ""
+//     let commentReturnObject
+//     createComment(commentObject).then(resp => commentReturnObject = [...resp])
+//     console.log('returned from db: ', commentReturnObject)
+//     return commentReturnObject
+// }
 
 
 //--------------------------------------------------event listeners----------------------------------------------------------//
@@ -125,8 +129,11 @@ const favouritesListRender = () => {
     // shoves them into the inner HTML:
     favouritesList.innerHTML=""
     state.currentUserFavourites.forEach(fav => {
+        console.log(fav)
         favouritesList.innerHTML += `<li class="favourites-item" data-destination-id="${fav.destination.id}">${fav.destination.title}</li>`
-        console.log(fav.destination.title)
+        let locatedDestination = findDestination(fav.destination.id)
+        favouritesList.innerHTML += `<img class='fav-image' src='${locatedDestination.pictures[0].picture_url}'>`
+      
     })    
 }
 

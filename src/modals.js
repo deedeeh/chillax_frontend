@@ -53,12 +53,19 @@ document.addEventListener('click', event => {
         moreInfoEl.innerHTML = ''
     }
 
+
+    if(event.target.classList.value === 'delete-btn') {
+        deleteButtonFunctionality()
+    }
+    
+
     if(event.target.classList.contains('override-modal-layout')) {
         const id = event.target.dataset.imgId
         const currentDestination = letsFindDestinationByPic(id)
         expandingImg(currentDestination, id)
     }
  
+
 })
 
 
@@ -91,28 +98,93 @@ const addModal = destination => {
         </form>
     </div>`
 
-    // const filteredComments = renderCommentsFromDb(destination)
-    // filteredComments.forEach(comment =>
-    // moreInfoEl.innerHTML += `${comment.content}` )
-
+    
     const commentList = document.querySelector(`.comment-list`)
-   
-    destination.comments.forEach(comment => {
-        let commentUser = findUserById(comment.user_id)
-        
-        commentList.innerHTML += `<li data-user-id=${commentUser.id} class="caption"> ${commentUser.name}: ${comment.content}</li>`
-        const commentItem = document.querySelector(`li[data-user-id="${commentUser.id}"]`)
-        commentUser.id === state.currentUserObject.id ? commentItem.innerHTML += `<br><button value="">Delete me</button>` : ""
-        })
-    
-    
     const commentForm = document.querySelector(`.comment-form`)
 
+    destination.comments.forEach(comment => {
+        let commentUser = findUserById(comment.user_id)
+        addCommentToPage(comment, commentList, commentUser)
+        const commentItem = document.querySelector(`div[div-comment-id="${comment.id}"]`)
+        if(comment.user_id === state.currentUserObject.id) {
+            appendDeleteButton(commentItem, comment.id)
+        } 
+    })
+        
+   
     commentForm.addEventListener('submit', event => {
         event.preventDefault()
-        const commentTextField = document.querySelector(`input[name="comment-text"]`)
-        let comment = commentTextField.value
         commentCreationFunction(destination)
-        commentList.innerHTML += `<p class="caption" data-id="${comment.id}">${state.currentUser}: ${comment} </p><br>`
+             .then(resp => {
+                 addCommentToPage(state.returnedComment, commentList, state.currentUserObject)
+                 state.selectedDestination.comments.push(state.returnedComment)
+             })
+             .then(resp => {
+                 let lastComment = document.querySelector('.comment-list').lastElementChild
+                 appendDeleteButton(lastComment, state.returnedComment.id)
+                }).then(getDestinations)
+                .then(destinations => {
+                    state.destinations = [...destinations]
+                    renderDestinations(destinations)})
+                
+   
     })
+
 } 
+
+
+const addCommentToPage = (commentObject, commentList, userObject) => {
+    console.log(commentObject)
+    let commentEl = document.createElement('div')
+    commentEl.setAttribute('div-comment-id',commentObject.id)
+    let commentUser = userObject
+    if (userObject === undefined){ commentUser = state.currentUserObject}
+    console.log("found the guy" , commentUser)
+    commentEl.innerHTML = `<li data-user-id=${commentUser.id} data-comment-id="${commentObject.id}" class="caption"> ${commentUser.name}: ${commentObject.content}</li>`
+    commentList.appendChild(commentEl)
+}
+
+
+const commentCreationFunction = destination => {
+    const commentTextField = document.querySelector(`input[name="comment-text"]`)
+    let comment = commentTextField.value
+    let commentObject = {user_id: state.currentUserObject.id, destination_id: destination.id, content: comment}
+    commentTextField.value = ""
+    return createComment(commentObject)
+            .then(resp => state.returnedComment = resp)
+}
+
+
+const appendDeleteButton = (commentItem, comment_id) => {
+            //commentItem is where we shove the button
+            const commentDeleteButton = document.createElement('button')
+            commentDeleteButton.setAttribute('data-comment-id',comment_id)
+            commentDeleteButton.classList.add('delete-btn')
+            // commentDeleteButton.style.
+            commentDeleteButton.innerText = "Delete me"
+            commentDeleteButton.addEventListener('click', ()=>{
+                deleteButtonFunctionality
+                commentDeleteButton.remove()
+            })
+            commentItem.appendChild(commentDeleteButton)
+}
+
+const deleteCommentFromLocal = id => {
+    state.destinations = state.destinations.filter(destination => destination.comments.filter(comment => comment.id != id))
+    state.selectedDestination.comments = state.selectedDestination.comments.filter(comment => comment.id != id)
+}
+
+
+const deleteButtonFunctionality = () =>{
+    console.log('creating delete button')
+    const deleteBtnId = event.target.dataset.commentId
+    const commentItem = document.querySelector(`li[data-comment-id="${deleteBtnId}"]`)
+    commentItem.remove()
+    console.log('deleted from page')
+    deleteComment(deleteBtnId)
+    console.log('deleted from db')
+    deleteCommentFromLocal(deleteBtnId)
+    console.log('deleted from locals')
+}
+
+

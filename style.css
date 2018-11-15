@@ -183,6 +183,12 @@ body {
     }
 }
 
+
+
+.fav-img{
+    max-width: 100px;
+}
+
 /********************* CSS for thumbnail images **********************/
 
 /* The grid: Four equal columns that floats next to each other */
@@ -251,5 +257,4 @@ body {
     margin: auto;
     display: inline-block;
 } */
-
 
