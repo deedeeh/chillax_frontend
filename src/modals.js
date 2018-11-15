@@ -72,7 +72,12 @@ const addModal = destination => {
     // moreInfoEl.innerHTML += `${comment.content}` )
 
     const commentList = document.querySelector(`.comment-list`)
-    destination.comments.forEach(comment => commentList.innerHTML += `<li class="caption"> ${findUserById(comment.user_id).name}: ${comment.content}</li>`)
+   
+    destination.comments.forEach(comment => {
+        let commentUser = findUserById(comment.user_id)
+        commentList.innerHTML += `<li data-user-id=${commentUser.id} class="caption"> ${commentUser.name}: ${comment.content}</li>`
+        })
+    
     
     const commentForm = document.querySelector(`.comment-form`)
 

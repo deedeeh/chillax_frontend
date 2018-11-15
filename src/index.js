@@ -37,9 +37,7 @@ const renderDestination = destination => {
     destinationEl.setAttribute('data-id', destination.id)
     destinationEl.innerHTML=`
       <h2>${destination.title}</h2>
-
       <img class='main-image' id='myImg' data-img-id='${destination.pictures[0].id}' src="${destination.pictures[0].picture_url}">
-
       <p>Recommended months: ${destination.months[0].name}</p>
       <p>Recommended budget: £${destination.price} per couple</p>
       <button class='add-favourite'>Add to favourites</button>
@@ -49,6 +47,8 @@ const renderDestination = destination => {
     addFavouriteButton = destinationEl.querySelector('.add-favourite')
     addFavouriteButton.addEventListener('click', () =>  addDestinationToFavourites( state.currentUserEmail, destination.title) )
     resultList.appendChild(destinationEl)
+
+
 }
 
 
