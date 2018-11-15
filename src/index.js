@@ -6,7 +6,7 @@ const resultList = document.querySelector('#result-list')
 const favouritesList = document.querySelector('.favourites-list')
 const showHide = document.querySelector("#show-hide-content")
 
-const state = {
+const state = { 
     currentUserObject: undefined,
     currentUser: undefined,
     destinations: [],

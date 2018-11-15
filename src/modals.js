@@ -75,7 +75,10 @@ const addModal = destination => {
    
     destination.comments.forEach(comment => {
         let commentUser = findUserById(comment.user_id)
+        
         commentList.innerHTML += `<li data-user-id=${commentUser.id} class="caption"> ${commentUser.name}: ${comment.content}</li>`
+        const commentItem = document.querySelector(`li[data-user-id="${commentUser.id}"]`)
+        commentUser.id === state.currentUserObject.id ? commentItem.innerHTML += `<br><button value="">Delete me</button>` : ""
         })
     
     
