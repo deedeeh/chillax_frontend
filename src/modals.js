@@ -16,7 +16,7 @@ const addMainImageToModal = destination => {
     const thumbnailsRow = modal.querySelector('.thumbnails-row')
 
     destination.pictures.forEach(pic => {
-        thumbnailsRow.innerHTML += `<div class="column"><img data-img-id="${pic.id}" class="modal-content override-modal-layout" src="${pic.picture_url}" style="width:10%"}/></div>`
+        thumbnailsRow.innerHTML += `<div class="column"><img data-img-id="${pic.id}" class="modal-content override-modal-layout" src="${pic.picture_url}"}/></div>`
     })
 
 }
