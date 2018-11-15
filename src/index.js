@@ -6,6 +6,8 @@ const resultList = document.querySelector('#result-list')
 const favouritesList = document.querySelector('.favourites-list')
 const showHide = document.querySelector("#show-hide-content")
 
+const errors = []
+
 const state = { 
     currentUserObject: undefined,
     currentUser: undefined,
@@ -87,6 +89,16 @@ monthOrPriceFilter.addEventListener('keyup', () => {
 
 signupForm.addEventListener('submit', event => {
     event.preventDefault()
+    validations(signupName.value,signupEmail.value)
+    if (errors.length > 0){
+        errors.forEach(error=>{
+            const errorItem = document.createElement('li')
+            errorItem.innerHTML = error
+            errorItem.classList.add('error')
+            signupForm.appendChild(errorItem)
+            errors.length = 0
+        })
+    }else{
     state.currentUser = signupName.value
     state.currentUserEmail = signupEmail.value
     console.log(state.currentUser, state.currentUserEmail)
@@ -106,7 +118,7 @@ signupForm.addEventListener('submit', event => {
     }
     // allow viewing entire page
     showHide.style.display="block"
-})
+}})
 
 
 // Both - add destination to userDestinations
@@ -160,4 +172,19 @@ showHide.style.display="none"
 
 
 
+
+const validations = (name, email) => {
+    if (name ==="" && email === ""){errors.push("Please fill in the blanks")}
+    if (name===""){errors.push("Name must be present")}
+    if (email === ""){errors.push("Email must be present")}
+}
+
+const showErrors = errors => {
+    errors.forEach(error => {
+      const errorItem = document.createElement('li')
+      errorItem.innerHTML = error
+      errorItem.classList.add('error')
+      signupForm.appendChild(errorItem)
+    })
+  }
 
