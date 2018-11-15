@@ -48,9 +48,11 @@ document.addEventListener('click', event => {
         const deleteBtnId = event.target.dataset.commentId
         const commentItem = document.querySelector(`li[data-comment-id="${deleteBtnId}"]`)
         commentItem.remove()
-        deleteComment(deleteBtnId).then(getComments)
-
-
+        console.log('deleted from page')
+        deleteComment(deleteBtnId)
+        console.log('deleted from db')
+        deleteCommentFromLocal(deleteBtnId)
+        console.log('deleted from locals')
     }
     
 })
@@ -75,40 +77,42 @@ const addModal = destination => {
         </form>
     </div>`
 
-    // const filteredComments = renderCommentsFromDb(destination)
-    // filteredComments.forEach(comment =>
-    // moreInfoEl.innerHTML += `${comment.content}` )
-
+    
     const commentList = document.querySelector(`.comment-list`)
     const commentForm = document.querySelector(`.comment-form`)
 
-    // currentComments = getComments().filter(comment => destination.comment.id === comment.id)
     destination.comments.forEach(comment => {
         let commentUser = findUserById(comment.user_id)
-        commentList.innerHTML += `<li data-user-id=${commentUser.id} data-comment-id="${comment.id}" class="caption"> ${commentUser.name}: ${comment.content}</li>`
-        const commentItem = document.querySelector(`li[data-user-id="${commentUser.id}"]`)
-        if(commentUser.id === state.currentUserObject.id) {
-            AppendDeleteButton(commentItem, comment.id)
+        addCommentToPage(comment, commentList, commentUser)
+        const commentItem = document.querySelector(`li[data-comment-id="${comment.id}"]`)
+        if(comment.user_id === state.currentUserObject.id) {
+            appendDeleteButton(commentItem, comment.id)
         } 
     })
         
    
     commentForm.addEventListener('submit', event => {
         event.preventDefault()
-        const commentTextField = document.querySelector(`input[name="comment-text"]`)
-        let comment = commentTextField.value
         commentCreationFunction(destination)
-             .then(resp=>createCommentAfterResponse(state.returnedComment, commentList))
+             .then(resp => {
+                 addCommentToPage(state.returnedComment, commentList, state.currentUserObject)
+                state.selectedDestination.comments.push(state.returnedComment)
+             }).then(resp => {
+                 let lastComment = document.querySelector('.comment-list').lastElementChild
+                 appendDeleteButton(lastComment, state.returnedComment.id)
+                })
+                
+           
     })
 } 
 
 
-
-
-const createCommentAfterResponse = (commentObject,commentList) => {
+const addCommentToPage = (commentObject, commentList, userObject) => {
     console.log(commentObject)
-    commentEl = document.createElement('div')
-    commentEl.innerHTML = `<li data-user-id=${state.currentUserObject.id} data-comment-id="${commentObject.id}" class="caption"> ${state.currentUserObject.name}: ${commentObject.content}</li>`
+    let commentEl = document.createElement('div')
+    let commentUser = userObject
+    console.log("found the guy" , commentUser)
+    commentEl.innerHTML = `<li data-user-id=${commentUser.id} data-comment-id="${commentObject.id}" class="caption"> ${commentUser.name}: ${commentObject.content}</li>`
     commentList.appendChild(commentEl)
 }
 
@@ -123,10 +127,16 @@ const commentCreationFunction = destination => {
 }
 
 
-const AppendDeleteButton = (commentItem, comment_id) => {
-    const commentDeleteButton = document.createElement('button')
+const appendDeleteButton = (commentItem, comment_id) => {
+            //commentItem is where we shove the button
+            const commentDeleteButton = document.createElement('button')
             commentDeleteButton.setAttribute('data-comment-id',comment_id)
             commentDeleteButton.classList.add('delete-btn')
             commentDeleteButton.innerText = "Delete me"
             commentItem.appendChild(commentDeleteButton)
+}
+
+const deleteCommentFromLocal = id => {
+    state.destinations = state.destinations.filter(destination => destination.comments.filter(comment => comment.id != id))
+    state.selectedDestination = state.selectedDestination.comments.filter(comment => comment.id != id)
 }
