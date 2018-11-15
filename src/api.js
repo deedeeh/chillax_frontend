@@ -11,7 +11,7 @@ const addUser = (name, email) => {
         method: 'POST',
         headers: {'Content-Type': 'application/json'},
         body: JSON.stringify({name: name, email: email})
-    })
+    }).then(resp=>resp.json())
 }
 
 const getAllUsers = () => 
