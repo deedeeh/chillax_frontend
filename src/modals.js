@@ -76,12 +76,28 @@ const addModal = destination => {
     destination.comments.forEach(comment => {
         let commentUser = findUserById(comment.user_id)
         
-        commentList.innerHTML += `<li data-user-id=${commentUser.id} class="caption"> ${commentUser.name}: ${comment.content}</li>`
+        commentList.innerHTML += `<li data-user-id=${commentUser.id} data-comment-id="${comment.id}" class="caption"> ${commentUser.name}: ${comment.content}</li>`
         const commentItem = document.querySelector(`li[data-user-id="${commentUser.id}"]`)
-        commentUser.id === state.currentUserObject.id ? commentItem.innerHTML += `<br><button value="">Delete me</button>` : ""
-        })
-    
-    
+        if(commentUser.id === state.currentUserObject.id) {
+            const commentDeleteButton = document.createElement('button')
+            commentDeleteButton.setAttribute('data-comment-id',comment.id)
+            commentDeleteButton.classList.add('delete-btn')
+            commentDeleteButton.innerText = "Delete me"
+            commentItem.appendChild(commentDeleteButton)
+            // commentDeleteButton.addEventListener('click', () =>{
+            //     console.log('click')
+            //     })
+        } 
+
+       
+
+
+
+
+    })
+
+
+        
     const commentForm = document.querySelector(`.comment-form`)
 
     commentForm.addEventListener('submit', event => {
@@ -92,3 +108,14 @@ const addModal = destination => {
         commentList.innerHTML += `<p class="caption" data-id="${comment.id}">${state.currentUser}: ${comment} </p><br>`
     })
 } 
+
+document.addEventListener('click', event => {
+    if(event.target.classList.value === 'delete-btn') {
+        const deleteBtnId = event.target.dataset.commentId
+        const commentItem = document.querySelector(`li[data-comment-id="${deleteBtnId}"]`)
+        commentItem.remove()
+        
+    }
+})
+
+
