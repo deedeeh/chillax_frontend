@@ -44,6 +44,14 @@ document.addEventListener('click', event => {
         moreInfoEl.innerHTML = ''
     }
 
+    if(event.target.classList.value === 'delete-btn') {
+        const deleteBtnId = event.target.dataset.commentId
+        const commentItem = document.querySelector(`li[data-comment-id="${deleteBtnId}"]`)
+        commentItem.remove()
+        deleteComment(deleteBtnId).then(getComments)
+
+
+    }
     
 })
 
@@ -72,50 +80,53 @@ const addModal = destination => {
     // moreInfoEl.innerHTML += `${comment.content}` )
 
     const commentList = document.querySelector(`.comment-list`)
-   
+    const commentForm = document.querySelector(`.comment-form`)
+
+    // currentComments = getComments().filter(comment => destination.comment.id === comment.id)
     destination.comments.forEach(comment => {
         let commentUser = findUserById(comment.user_id)
-        
         commentList.innerHTML += `<li data-user-id=${commentUser.id} data-comment-id="${comment.id}" class="caption"> ${commentUser.name}: ${comment.content}</li>`
         const commentItem = document.querySelector(`li[data-user-id="${commentUser.id}"]`)
         if(commentUser.id === state.currentUserObject.id) {
-            const commentDeleteButton = document.createElement('button')
-            commentDeleteButton.setAttribute('data-comment-id',comment.id)
-            commentDeleteButton.classList.add('delete-btn')
-            commentDeleteButton.innerText = "Delete me"
-            commentItem.appendChild(commentDeleteButton)
-            // commentDeleteButton.addEventListener('click', () =>{
-            //     console.log('click')
-            //     })
+            AppendDeleteButton(commentItem, comment.id)
         } 
-
-       
-
-
-
-
     })
-
-
         
-    const commentForm = document.querySelector(`.comment-form`)
-
+   
     commentForm.addEventListener('submit', event => {
         event.preventDefault()
         const commentTextField = document.querySelector(`input[name="comment-text"]`)
         let comment = commentTextField.value
         commentCreationFunction(destination)
-        commentList.innerHTML += `<p class="caption" data-id="${comment.id}">${state.currentUser}: ${comment} </p><br>`
+             .then(resp=>createCommentAfterResponse(state.returnedComment, commentList))
     })
 } 
 
-document.addEventListener('click', event => {
-    if(event.target.classList.value === 'delete-btn') {
-        const deleteBtnId = event.target.dataset.commentId
-        const commentItem = document.querySelector(`li[data-comment-id="${deleteBtnId}"]`)
-        commentItem.remove()
-        
-    }
-})
 
 
+
+const createCommentAfterResponse = (commentObject,commentList) => {
+    console.log(commentObject)
+    commentEl = document.createElement('div')
+    commentEl.innerHTML = `<li data-user-id=${state.currentUserObject.id} data-comment-id="${commentObject.id}" class="caption"> ${state.currentUserObject.name}: ${commentObject.content}</li>`
+    commentList.appendChild(commentEl)
+}
+
+
+const commentCreationFunction = destination => {
+    const commentTextField = document.querySelector(`input[name="comment-text"]`)
+    let comment = commentTextField.value
+    let commentObject = {user_id: state.currentUserObject.id, destination_id: destination.id, content: comment}
+    commentTextField.value = ""
+    return createComment(commentObject)
+            .then(resp => state.returnedComment = resp)
+}
+
+
+const AppendDeleteButton = (commentItem, comment_id) => {
+    const commentDeleteButton = document.createElement('button')
+            commentDeleteButton.setAttribute('data-comment-id',comment_id)
+            commentDeleteButton.classList.add('delete-btn')
+            commentDeleteButton.innerText = "Delete me"
+            commentItem.appendChild(commentDeleteButton)
+}

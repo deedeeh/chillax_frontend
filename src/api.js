@@ -50,8 +50,12 @@ const createComment = commentObject =>
         method: "POST",
         headers: {'Content-Type': 'application/json'},
         body: JSON.stringify(commentObject)
-    }).then(resp=>resp.json())
+    }).then(resp => resp.json())
 
+const deleteComment = id => 
+    fetch(`${commentsURL}/${id}`,{
+        method: "DELETE"
+    }).then(resp=>resp.json())
 // --------------------------------------------- 
 
 const getUserDestination =  id =>
