@@ -108,7 +108,9 @@ body {
     margin: auto;
     display: block;
     width: 80%;
-    max-width: 700px;
+    max-width: 40%;
+    /* max-height: 100%; */
+    
 }
 
 /* Caption of Modal Image */
@@ -218,6 +220,9 @@ body {
     margin-top: 20px;
     display: flex;
     justify-content: center;
+    max-width: 55%;
+    align-items: center;
+    margin: auto;
 }
 /* Clear floats after the columns */
 .thumbnails-row:after {
@@ -230,7 +235,9 @@ body {
 .container {
     position: relative;
     display: block;
-    height: 400px;
+    /* padding: 0;
+    margin: 0; */
+    height: 465px;
     overflow: hidden;
 }
 
