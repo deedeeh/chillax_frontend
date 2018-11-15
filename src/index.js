@@ -132,7 +132,7 @@ const favouritesListRender = () => {
         console.log(fav)
         favouritesList.innerHTML += `<li class="favourites-item" data-destination-id="${fav.destination.id}">${fav.destination.title}</li>`
         let locatedDestination = findDestination(fav.destination.id)
-        favouritesList.innerHTML += `<img class='fav-image' src='${locatedDestination.pictures[0].picture_url}'>`
+        favouritesList.innerHTML += `<img class='fav-image' src='${locatedDestination.pictures[0].picture_url}'><hr style="max-width:80%">`
       
     })    
 }

@@ -234,6 +234,25 @@ body {
     overflow: hidden;
 }
 
+.fav-image {
+    display: flex;
+    max-width: 80%;
+    margin: auto;
+    align-items: center;
+}
+
+.favourites-item {
+    display: flex;
+    list-style-type: none;
+    margin: auto;
+    align-items: center;
+    padding: 5% 0 5% 10%;
+}
+
+.favourites-list {
+    margin: auto;
+    padding: 0;
+}
 /* Expanding image text */
 /* #imgtext {
     position: absolute;
