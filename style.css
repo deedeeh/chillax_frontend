@@ -163,7 +163,7 @@ body {
     .modal-content {
         width: 100%;
     }
-
+}
 /************* End More Info Pop UP*************/
 
 /* Responsive layout - when the screen is less than 800px wide, make the two columns stack on top of each other instead of next to each other */
@@ -180,4 +180,9 @@ body {
         float: none;
         width: 100%;
     }
+}
+
+
+.fav-img{
+    max-width: 100px;
 }

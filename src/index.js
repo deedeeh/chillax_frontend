@@ -129,8 +129,11 @@ const favouritesListRender = () => {
     // shoves them into the inner HTML:
     favouritesList.innerHTML=""
     state.currentUserFavourites.forEach(fav => {
+        console.log(fav)
         favouritesList.innerHTML += `<li class="favourites-item" data-destination-id="${fav.destination.id}">${fav.destination.title}</li>`
-        console.log(fav.destination.title)
+        let locatedDestination = findDestination(fav.destination.id)
+        favouritesList.innerHTML += `<img class='fav-image' src='${locatedDestination.pictures[0].picture_url}'>`
+      
     })    
 }
 
