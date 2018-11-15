@@ -76,7 +76,6 @@ document.addEventListener('click', event => {
 //DINA create a separate modal method and call it in global event listener
 const addModal = destination => {
     const moreInfoEl = document.querySelector(`div [data-id='${destination.id}'] .more-info`)
-    // id="img01"
     moreInfoEl.innerHTML = 
     `<div id="myModal" class="modal">
         <span class="close">&times;</span>

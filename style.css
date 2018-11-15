@@ -241,17 +241,53 @@ body {
     align-items: center;
 }
 
+.favourites-item{
+    list-style-type: none;
+}
+
 .favourites-item {
     display: flex;
-    list-style-type: none;
     margin: auto;
     align-items: center;
     padding: 5% 0 5% 10%;
 }
 
+h1 {
+    display: flex;
+    margin: auto;
+    align-items: center;
+    padding: 5% 0 5% 12%;
+    max-width: 80%;
+}
+
+div.card > h2 {
+    display: flex;
+    margin: auto;
+    align-items: center;
+    padding: 5% 0 5% 10%;
+}
 .favourites-list {
     margin: auto;
     padding: 0;
+}
+
+
+.destination-element{
+    max-width: 70%;
+    margin: auto;
+}
+
+
+.main-image{
+    display: flex;
+    max-width: 80%;
+    margin: auto;
+}
+
+.destination-container-div{
+    max-width: 80%;
+    margin: auto;
+
 }
 /* Expanding image text */
 /* #imgtext {
