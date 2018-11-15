@@ -111,6 +111,7 @@ const addCommentToPage = (commentObject, commentList, userObject) => {
     console.log(commentObject)
     let commentEl = document.createElement('div')
     let commentUser = userObject
+    if (userObject === undefined){ commentUser = state.currentUserObject}
     console.log("found the guy" , commentUser)
     commentEl.innerHTML = `<li data-user-id=${commentUser.id} data-comment-id="${commentObject.id}" class="caption"> ${commentUser.name}: ${commentObject.content}</li>`
     commentList.appendChild(commentEl)
@@ -138,5 +139,5 @@ const appendDeleteButton = (commentItem, comment_id) => {
 
 const deleteCommentFromLocal = id => {
     state.destinations = state.destinations.filter(destination => destination.comments.filter(comment => comment.id != id))
-    state.selectedDestination = state.selectedDestination.comments.filter(comment => comment.id != id)
+    state.selectedDestination.comments = state.selectedDestination.comments.filter(comment => comment.id != id)
 }
