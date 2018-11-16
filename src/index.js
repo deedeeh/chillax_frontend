@@ -7,7 +7,7 @@ const favouritesList = document.querySelector('.favourites-list')
 const showHide = document.querySelector("#show-hide-content")
 
 const state = { 
-    currentUserObject: undefined,
+    currentUserObject: window.localStorage.getItem('currentUser'),
     currentUser: undefined,
     destinations: [],
     selectedDestination: undefined,
@@ -37,13 +37,17 @@ const renderDestination = destination => {
     destinationEl.setAttribute('class','destination-element')
     destinationEl.setAttribute('data-id', destination.id)
     destinationEl.innerHTML=`
+     
+      <div class="style-result-images">
+        <img class='main-image' id='myImg' data-img-id='${destination.pictures[0].id}' src="${destination.pictures[0].picture_url}">
+      </div>
+      <div class="destination-container-div">
       <h2>${destination.title}</h2>
-      <img class='main-image' id='myImg' data-img-id='${destination.pictures[0].id}' src="${destination.pictures[0].picture_url}">
-      <p>Recommended months: ${destination.months[0].name}</p>
-      <p>Recommended budget: £${destination.price} per couple</p>
-      <button class='add-favourite'>Add to favourites</button>
-      <div class='more-info'></div>
-      <hr>
+        <p>Recommended months: ${destination.months[0].name}</p>
+        <p>Recommended budget: £${destination.price} per couple</p>
+        <button class='add-favourite'>Add to favourites</button>
+        <div class='more-info'></div>
+      </div>
     `
     addFavouriteButton = destinationEl.querySelector('.add-favourite')
     addFavouriteButton.addEventListener('click', () =>  addDestinationToFavourites( state.currentUserEmail, destination.title) )
@@ -94,8 +98,9 @@ signupForm.addEventListener('submit', event => {
     if (loggedinUser){
         signupForm.innerText = `Welcome back, ${state.currentUser}`
         favouritesListRender()
-    }
-    else {
+        console.log('current user')
+        window.localStorage.setItem('currentUser', JSON.stringify(loggedinUser))
+    } else {
         signupForm.innerText = `Welcome, ${state.currentUser}`
         addUser(state.currentUser, state.currentUserEmail)
             .then(res=>getAllUsers())
@@ -132,10 +137,11 @@ const favouritesListRender = () => {
         console.log(fav)
         favouritesList.innerHTML += `<li class="favourites-item" data-destination-id="${fav.destination.id}">${fav.destination.title}</li>`
         let locatedDestination = findDestination(fav.destination.id)
-        favouritesList.innerHTML += `<img class='fav-image' src='${locatedDestination.pictures[0].picture_url}'>`
+        favouritesList.innerHTML += `<div class="style-fav-images"><img class='fav-image' src='${locatedDestination.pictures[0].picture_url}'></div>`
       
     })    
 }
+
 
 
 

@@ -37,3 +37,5 @@
         //     moreInfoEl.innerHTML += `<img src="${pic.picture_url}">`
         // })
         
+
+       

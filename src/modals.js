@@ -3,21 +3,30 @@
 const addMainImageToModal = destination => {
     // Get the image and insert it inside the modal - use its "alt" text as a caption
     const mainImage = document.querySelector(`img[data-img-id='${destination.pictures[0].id}']`)
-    console.log(mainImage)
     const modal = document.querySelector('#myModal');
-    const modalImg = document.querySelector("#img01");
+    // const modalImg = document.querySelector("#img01");
+    const modalImg = document.querySelector("#expandedImg");
     modal.style.display = "block";
+    // modalImg.classList.add('expandedImg')
     modalImg.setAttribute('src', `${mainImage.src}`);
 
-    const moreInfoEl = document.querySelector(`div [data-id='${destination.id}'] .more-info`)
-    const picturesDivEl = moreInfoEl.querySelector('.all-pictures')
+    // const moreInfoEl = document.querySelector(`div [data-id='${destination.id}'] .more-info`)
+    // const picturesDivEl = moreInfoEl.querySelector('.all-pictures')
+
+    const thumbnailsRow = modal.querySelector('.thumbnails-row')
 
     destination.pictures.forEach(pic => {
-        picturesDivEl.innerHTML += `<img class="modal-content" src="${pic.picture_url}">`
+        thumbnailsRow.innerHTML += `<div class="column"><img data-img-id="${pic.id}" class="modal-content override-modal-layout" src="${pic.picture_url}"}/></div>`
     })
 
 }
 
+const expandingImg = (destination, id) => {
+    const expandImg = document.querySelector("#expandedImg");
+    const foundPic = destination.pictures.find(pic => pic.id === parseInt(id))
+    expandImg.src = foundPic.picture_url;
+    expandImg.parentElement.style.display = "block";
+}
 
 //DINA picture event listener
 document.addEventListener('click', event => {
@@ -44,29 +53,47 @@ document.addEventListener('click', event => {
         moreInfoEl.innerHTML = ''
     }
 
+
     if(event.target.classList.value === 'delete-btn') {
         deleteButtonFunctionality()
     }
     
+
+    if(event.target.classList.contains('override-modal-layout')) {
+        const id = event.target.dataset.imgId
+        const currentDestination = letsFindDestinationByPic(id)
+        expandingImg(currentDestination, id)
+    }
+ 
+
 })
+
+
+
+// "this.parentElement.style.display='none'"
 
 
 //DINA create a separate modal method and call it in global event listener
 const addModal = destination => {
     const moreInfoEl = document.querySelector(`div [data-id='${destination.id}'] .more-info`)
-   
     moreInfoEl.innerHTML = 
     `<div id="myModal" class="modal">
         <span class="close">&times;</span>
-        <img class="modal-content" id="img01">
-        <div class="all-pictures"></div>
+        <div class="all-pictures">
+            <div class="container">
+                <img class="modal-content" id="expandedImg"/>
+            </div>
+            <div class="thumbnails-row">
+
+            </div>
+        </div>
         <p class="caption">${destination.content}</p>
         <p class="caption">Recommended budget: £${destination.price} per couple</p>
         <p class="caption">Recommended months: ${destination.months[0].name}</p>
         <div class="comment-list"></div>
         <form class="comment-form">
             <input name="comment-text" class="caption" placeholer="Add a comment">
-            <input  class="caption" type="submit" value="Add comment">
+            <input class="caption" type="submit" value="Add comment">
         </form>
     </div>`
 
@@ -112,7 +139,7 @@ const addCommentToPage = (commentObject, commentList, userObject) => {
     let commentUser = userObject
     if (userObject === undefined){ commentUser = state.currentUserObject}
     console.log("found the guy" , commentUser)
-    commentEl.innerHTML = `<li data-user-id=${commentUser.id} data-comment-id="${commentObject.id}" class="caption"> ${commentUser.name}: ${commentObject.content}</li>`
+    commentEl.innerHTML = `<li data-user-id=${commentUser.id} data-comment-id="${commentObject.id}" class="caption"> ${commentUser.name}:<br /> ${commentObject.content}</li>`
     commentList.appendChild(commentEl)
 }
 
