@@ -18,7 +18,7 @@ const state = {
     returnedComment: undefined
 }
 
-
+const errors =[]
 //-------------------------------functions-------------------------------------------------------------------------//
 
 
@@ -88,6 +88,16 @@ monthOrPriceFilter.addEventListener('keyup', () => {
 
 signupForm.addEventListener('submit', event => {
     event.preventDefault()
+    validations(signupName.value,signupEmail.value)
+    if (errors.length > 0){
+        errors.forEach(error=>{
+            const errorItem = document.createElement('li')
+            errorItem.innerHTML = error
+            errorItem.classList.add('error')
+            signupForm.appendChild(errorItem)
+            errors.length = 0
+        })
+    }else{
     state.currentUser = signupName.value
     state.currentUserEmail = signupEmail.value
     console.log(state.currentUser, state.currentUserEmail)
@@ -105,7 +115,7 @@ signupForm.addEventListener('submit', event => {
         addUser(state.currentUser, state.currentUserEmail)
             .then(res=>getAllUsers())
             .then(res=>state.currentUserObject = findUserByEmail(state.currentUserEmail))
-    }
+    }}
     // allow viewing entire page
     showHide.style.display="block"
 })
@@ -162,7 +172,5 @@ getUserDestinations().then(resp => state.allUserDestinations = [...resp])
 
 // hides data on page except footer and login
 showHide.style.display="none"
-
-
 
 
