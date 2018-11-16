@@ -119,11 +119,13 @@ const addDestinationToFavourites = (userEmail, destinationName) => {
     foundUser = state.allUsers.find(user => user.email === userEmail)
     console.log('found the user. this is before the post request: ',foundUser)
 
+    if(state.currentUserFavourites.find(ud => ud.destination.title === destinationName)){}
+    else{
     postUserDestination(foundUser.id, foundDestination.id)
         .then(getUserDestinations)
         .then(userDestinations => {
             state.allUserDestinations = [...userDestinations]
-            favouritesListRender()})    
+            favouritesListRender()})    }
 }
 
 
