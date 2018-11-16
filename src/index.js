@@ -38,7 +38,9 @@ const renderDestination = destination => {
     destinationEl.setAttribute('data-id', destination.id)
     destinationEl.innerHTML=`
      
-      <img class='main-image' id='myImg' data-img-id='${destination.pictures[0].id}' src="${destination.pictures[0].picture_url}">
+      <div class="style-result-images">
+        <img class='main-image' id='myImg' data-img-id='${destination.pictures[0].id}' src="${destination.pictures[0].picture_url}">
+      </div>
       <div class="destination-container-div">
       <h2>${destination.title}</h2>
         <p>Recommended months: ${destination.months[0].name}</p>
@@ -135,10 +137,11 @@ const favouritesListRender = () => {
         console.log(fav)
         favouritesList.innerHTML += `<li class="favourites-item" data-destination-id="${fav.destination.id}">${fav.destination.title}</li>`
         let locatedDestination = findDestination(fav.destination.id)
-        favouritesList.innerHTML += `<img class='fav-image' src='${locatedDestination.pictures[0].picture_url}'><hr style="max-width:80%">`
+        favouritesList.innerHTML += `<div class="style-fav-images"><img class='fav-image' src='${locatedDestination.pictures[0].picture_url}'></div>`
       
     })    
 }
+
 
 
 

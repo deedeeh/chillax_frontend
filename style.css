@@ -20,6 +20,22 @@ body {
     font-size: 50px;
 }
 
+.signup-input {
+    width: 10%;
+    margin-bottom: 10px;
+    padding: 5px;
+}
+
+#signup-submit {
+    width: 10%;
+    padding: 5px 10px;
+    border-radius: 6px;
+    background: rgb(64,186,191);
+    box-shadow: 2px 2px 2px #F0F0F0;
+    font-weight: bold;
+    font-size: 0.9rem;
+}
+
 /* Style the top navigation bar */
 .topnav {
     overflow: hidden;
@@ -80,8 +96,13 @@ body {
 
 /* Footer */
 .footer {
-    padding: 20px;
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    padding: 10px;
     text-align: center;
+    color: 	rgb(80,80,80);
     background: #ddd;
     margin-top: 20px;
 }
@@ -107,10 +128,9 @@ body {
 .modal-content {
     margin: auto;
     display: block;
-    width: 80%;
-    max-width: 40%;
+    width: 70%;
+    max-width: 30%;
     /* max-height: 100%; */
-    
 }
 
 /* Caption of Modal Image */
@@ -235,28 +255,39 @@ body {
 .container {
     position: relative;
     display: block;
-    /* padding: 0;
-    margin: 0; */
-    height: 465px;
+    height: 485px;
     overflow: hidden;
 }
 
-.fav-image {
-    display: flex;
-    max-width: 80%;
-    margin: auto;
-    align-items: center;
+.style-result-images {
+    position: relative;
+    display: block;
+    height: 490px;
+    overflow: hidden;
 }
 
-.favourites-item{
-    list-style-type: none;
+.style-fav-images {
+    position: relative;
+    display: block;
+    height: 220px;
+    overflow: hidden;
+    border-bottom: 1px solid #808080;
+    margin-bottom: 10px;
+}
+
+.fav-image {
+    margin: auto;
+    display: block;
+    width: 60%;
+    max-width: 80%;
 }
 
 .favourites-item {
+    list-style-type: none;
     display: flex;
     margin: auto;
     align-items: center;
-    padding: 5% 0 5% 10%;
+    padding: 5% 18% 5% 19%;
 }
 
 h1 {
@@ -271,8 +302,9 @@ div.card > h2 {
     display: flex;
     margin: auto;
     align-items: center;
-    padding: 5% 0 5% 10%;
+    padding: 5% 18% 5% 19%;
 }
+
 .favourites-list {
     margin: auto;
     padding: 0;
@@ -284,11 +316,17 @@ div.card > h2 {
     margin: auto;
 }
 
+#result-list:last-child {
+    margin-bottom: 60px;
+}
+
 
 .main-image{
-    display: flex;
-    max-width: 80%;
     margin: auto;
+    display: block;
+    width: 60%;
+    max-width: 70%;
+    /* border-radius: 8px; */ 
 }
 
 .destination-container-div{
