@@ -1,4 +1,9 @@
 
+const commentValidations = (comment) => {
+    if (comment.length<2){errors.push("Comment too short!")}
+    if (comment.length>100){errors.push("Comment must be under 200 characters.")}
+}
+
 // DINA append Image to Modal
 const addMainImageToModal = destination => {
     // Get the image and insert it inside the modal - use its "alt" text as a caption
