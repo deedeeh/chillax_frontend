@@ -7,7 +7,7 @@ const favouritesList = document.querySelector('.favourites-list')
 const showHide = document.querySelector("#show-hide-content")
 
 const state = { 
-    currentUserObject: undefined,
+    currentUserObject: window.localStorage.getItem('currentUser'),
     currentUser: undefined,
     destinations: [],
     selectedDestination: undefined,
@@ -48,7 +48,6 @@ const renderDestination = destination => {
         <button class='add-favourite'>Add to favourites</button>
         <div class='more-info'></div>
       </div>
-      <hr>
     `
     addFavouriteButton = destinationEl.querySelector('.add-favourite')
     addFavouriteButton.addEventListener('click', () =>  addDestinationToFavourites( state.currentUserEmail, destination.title) )
@@ -99,8 +98,9 @@ signupForm.addEventListener('submit', event => {
     if (loggedinUser){
         signupForm.innerText = `Welcome back, ${state.currentUser}`
         favouritesListRender()
-    }
-    else {
+        console.log('current user')
+        window.localStorage.setItem('currentUser', JSON.stringify(loggedinUser))
+    } else {
         signupForm.innerText = `Welcome, ${state.currentUser}`
         addUser(state.currentUser, state.currentUserEmail)
             .then(res=>getAllUsers())
