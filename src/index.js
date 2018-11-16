@@ -115,10 +115,10 @@ signupForm.addEventListener('submit', event => {
         addUser(state.currentUser, state.currentUserEmail)
             .then(res=>getAllUsers())
             .then(res=>state.currentUserObject = findUserByEmail(state.currentUserEmail))
-    }}
+    }
     // allow viewing entire page
     showHide.style.display="block"
-})
+}})
 
 
 // Both - add destination to userDestinations
@@ -174,3 +174,9 @@ getUserDestinations().then(resp => state.allUserDestinations = [...resp])
 showHide.style.display="none"
 
 
+
+const validations = (name, email) => {
+    if (name ==="" && email === ""){errors.push("Please fill in the blanks")}
+    if (name===""){errors.push("Name must be present")}
+    if (email === ""){errors.push("Email must be present")}
+}
