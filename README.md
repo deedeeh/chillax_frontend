@@ -1,4 +1,4 @@
-chillax_frontend
+# chillax_frontend
 
 Front end repository of the project. To see the Back end written in rails please check out this repository:
 https://github.com/EdPutans/chillax-backend
