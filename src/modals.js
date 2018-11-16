@@ -125,6 +125,8 @@ const addModal = destination => {
    
     commentForm.addEventListener('submit', event => {
         event.preventDefault()
+        const commentArea = document.querySelector('.comment-list')
+        const commentTextField = document.querySelector(`input[name="comment-text"]`)
         let comment = commentTextField.value
         commentValidations(comment)
         if (errors.length > 0){
