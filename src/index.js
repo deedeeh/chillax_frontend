@@ -76,7 +76,8 @@ const renderDestination = destination => {
 
 
 //ED filter Eventlistener:
-monthOrPriceFilter.addEventListener('keyup', () => {
+monthOrPriceFilter.addEventListener('keyup', event => {
+    event.preventDefault()
     resultList.innerHTML=""
     let filteredDestinations = state.destinations.filter(destination => {
         return destination.months[0].name.toLowerCase().includes(monthOrPriceFilter.value.toLowerCase()) || parseInt(destination.price) <= parseInt(monthOrPriceFilter.value)
@@ -142,6 +143,7 @@ const addDestinationToFavourites = (userEmail, destinationName) => {
 //argument - currentUser to show all the user's favourites
 const favouritesListRender = () => {
     //filters only current user's favs:
+    
     state.currentUserFavourites = state.allUserDestinations.filter(fav => fav.user.email.toLowerCase() === state.currentUserEmail.toLowerCase())
     // shoves them into the inner HTML:
     favouritesList.innerHTML=""
