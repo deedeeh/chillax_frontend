@@ -53,6 +53,13 @@ document.addEventListener('click', event => {
         moreInfoEl.innerHTML = ''
     }
 
+    if(event.target.className === 'fav-image' ){
+        const dataId = event.target.dataset.destId
+        foundDestination = state.destinations.find(dest=>dest.id==dataId)
+        addModal(foundDestination)
+        state.selectedDestination = foundDestination
+        addMainImageToModal(foundDestination)
+    }
 
     if(event.target.classList.value === 'delete-btn') {
         deleteButtonFunctionality()
