@@ -125,6 +125,18 @@ const addModal = destination => {
    
     commentForm.addEventListener('submit', event => {
         event.preventDefault()
+        let comment = commentTextField.value
+        commentValidations(comment)
+        if (errors.length > 0){
+            errors.forEach(error=>{
+                const errorItem = document.createElement('li')
+                errorItem.innerHTML = error
+                errorItem.classList.add('error')
+                errorItem.classList.add('caption')
+                commentArea.appendChild(errorItem)
+                errors.length = 0
+            })
+        }else{
         commentCreationFunction(destination)
              .then(resp => {
                  addCommentToPage(state.returnedComment, commentList, state.currentUserObject)
@@ -138,7 +150,7 @@ const addModal = destination => {
                     state.destinations = [...destinations]
                     renderDestinations(destinations)})
                 
-   
+                }
     })
 
 } 
