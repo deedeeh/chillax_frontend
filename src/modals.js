@@ -146,7 +146,7 @@ const addCommentToPage = (commentObject, commentList, userObject) => {
     let commentUser = userObject
     if (userObject === undefined){ commentUser = state.currentUserObject}
     console.log("found the guy" , commentUser)
-    commentEl.innerHTML = `<li data-user-id=${commentUser.id} data-comment-id="${commentObject.id}" class="caption"> ${commentUser.name}:<br /> ${commentObject.content}</li>`
+    commentEl.innerHTML = `<li data-user-id=${commentUser.id} data-comment-id="${commentObject.id}" class="caption comment"> ${commentUser.name.toUpperCase()}:<br /><span>${commentObject.content}</span></li>`
     commentList.appendChild(commentEl)
 }
 

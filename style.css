@@ -44,7 +44,7 @@ body {
 
 .filter {
     display: flex;
-    margin: auto;
+    margin: 19px auto 0;
     padding: 20px;
     width: 30%;
 }
@@ -274,18 +274,20 @@ body {
 }
 
 .style-fav-images {
-    padding: 0 10% 2%;
+    margin: auto;
+    padding: 0 10% 4%;
     position: relative;
     display: block;
     overflow: hidden;
     border-bottom: 1px solid #808080;
+    width: 80%;
 }
 
 .fav-image {
     margin: auto;
     display: block;
-    width: 200px;
-    height: 200px;
+    width: 380px;
+    height: 230px;
     object-fit: cover;
 }
 
@@ -353,6 +355,17 @@ div.card > h2 {
     margin: 2% auto;
     padding: 0 10% 2%;
     border-bottom: 1px solid #808080;
+}
+
+.comment {
+    background-color: #808080;
+    border: 1px solid;
+    border-color: #585858;
+    margin-bottom: 2px;
+}
+.comment span {
+    margin-top: 10px;
+
 }
 /* Expanding image text */
 /* #imgtext {
