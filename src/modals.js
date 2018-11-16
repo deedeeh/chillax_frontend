@@ -1,4 +1,10 @@
 
+const commentValidations = (comment) => {
+    if (comment.length<2){errors.push("Comment too short!")}
+    if (comment.length>100){errors.push("Comment must be under 200 characters.")}
+}
+
+
 // DINA append Image to Modal
 const addMainImageToModal = destination => {
     // Get the image and insert it inside the modal - use its "alt" text as a caption
@@ -113,6 +119,20 @@ const addModal = destination => {
    
     commentForm.addEventListener('submit', event => {
         event.preventDefault()
+        const commentArea = document.querySelector('.comment-list')
+        const commentTextField = document.querySelector(`input[name="comment-text"]`)
+        let comment = commentTextField.value
+        commentValidations(comment)
+        if (errors.length > 0){
+            errors.forEach(error=>{
+                const errorItem = document.createElement('li')
+                errorItem.innerHTML = error
+                errorItem.classList.add('error')
+                errorItem.classList.add('caption')
+                commentArea.appendChild(errorItem)
+                errors.length = 0
+            })
+        }else{
         commentCreationFunction(destination)
              .then(resp => {
                  addCommentToPage(state.returnedComment, commentList, state.currentUserObject)
@@ -125,7 +145,7 @@ const addModal = destination => {
                 .then(destinations => {
                     state.destinations = [...destinations]
                     renderDestinations(destinations)})
-                
+    }
    
     })
 
