@@ -44,8 +44,16 @@ document.addEventListener('click', event => {
         addMainImageToModal(state.selectedDestination)
     }
     // ED click on the favorite list item 
-    if(event.target.className === 'favourites-item'){
+    if(event.target.className === 'favourites-item' ){
         const dataId = event.target.dataset.destinationId
+        foundDestination = state.destinations.find(dest=>dest.id==dataId)
+        addModal(foundDestination)
+        state.selectedDestination = foundDestination
+        addMainImageToModal(foundDestination)
+    }
+
+    if(event.target.className === 'fav-image' ){
+        const dataId = event.target.dataset.destId
         foundDestination = state.destinations.find(dest=>dest.id==dataId)
         addModal(foundDestination)
         state.selectedDestination = foundDestination
