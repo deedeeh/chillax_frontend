@@ -3,7 +3,7 @@
 Front end repository of the project. To see the Back end written in rails please check out this repository:
 https://github.com/EdPutans/chillax-backend
 
-Please check the app [demo](https://www.youtube.com/watch?v=mfBWbOORUiU)
+Chillax app [demo](https://www.youtube.com/watch?v=mfBWbOORUiU)
 
 Wonder where to go for this holiday? Not sure whether if the weather is typically good this time around? What about the budget?
 If these questions give you a headache, then this app is for you to try!
