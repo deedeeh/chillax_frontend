@@ -3,15 +3,33 @@ const signupName = document.querySelector(`#signup-form [name='name']`)
 const signupEmail = document.querySelector(`#signup-form [name='email']`)
 const monthOrPriceFilter = document.querySelector(`#filter-form [name='month']`)
 const resultList = document.querySelector('#result-list')
-// more info element to go into each element appended to the page
+const favouritesList = document.querySelector('.favourites-list')
+const showHide = document.querySelector("#show-hide-content")
 
-const state = {
+const state = { 
+    currentUserObject: window.localStorage.getItem('currentUser'),
     currentUser: undefined,
+    destinations: [],
+    selectedDestination: undefined,
     currentUserEmail: undefined,
-    destinations: []
+    allUserDestinations: [],
+    currentUserFavourites: [],
+    allUsers: [],
+    returnedComment: undefined
 }
 
-//--------------------------------------------------------------------------------------------------------
+
+//-------------------------------functions-------------------------------------------------------------------------//
+
+
+const findUserById = id => state.allUsers.find(user => user.id === parseInt(id))
+const findUserByName = name => state.allUsers.find(user => user.name === name)
+const findUserByEmail = email => state.allUsers.find(user => user.email === email)
+const findDestination = id => state.destinations.find(destination => destination.id === parseInt(id))
+const letsFindDestinationByPic = (imageId) => {
+state.selectedDestination = state.destinations.find(dest => dest.pictures.find(pic=> pic.id == parseInt(imageId)))
+    return state.selectedDestination
+}
 
 
 const renderDestination = destination => {
@@ -19,32 +37,45 @@ const renderDestination = destination => {
     destinationEl.setAttribute('class','destination-element')
     destinationEl.setAttribute('data-id', destination.id)
     destinationEl.innerHTML=`
+     
+      <div class="style-result-images">
+        <img class='main-image' id='myImg' data-img-id='${destination.pictures[0].id}' src="${destination.pictures[0].picture_url}">
+      </div>
+      <div class="destination-container-div">
       <h2>${destination.title}</h2>
-      <img src="${destination.pictures[0].picture_url}">
-      <p>Recommended months: ${destination.months[0].name}</p>
-      <p>Recommended budget: £${destination.price}</p>
-      <div class='more-info'></div>
-      <hr>
+        <p>Recommended months: ${destination.months[0].name}</p>
+        <p>Recommended budget: £${destination.price} per couple</p>
+        <button class='add-favourite'>Add to favourites</button>
+        <div class='more-info'></div>
+      </div>
     `
-     destinationEl.addEventListener('click', () => {
-        const moreInfoEl = document.querySelector(`div [data-id='${destination.id}'] .more-info`)
-        
-        moreInfoEl.innerHTML = 
-        `<p>${destination.content}</p>`
-        // ${destination.pictures.forEach(pic => `<img src="${pic.picture_url}">`)}  ASK SOMEONE ABOUT THIS
-        destination.pictures.forEach(pic => {
-            moreInfoEl.innerHTML += `<img src="${pic.picture_url}">`
-        }) 
-     })
-
+    addFavouriteButton = destinationEl.querySelector('.add-favourite')
+    addFavouriteButton.addEventListener('click', () =>  addDestinationToFavourites( state.currentUserEmail, destination.title) )
     resultList.appendChild(destinationEl)
-    state.renderedDestinations.push(destination)
+
+
 }
 
-//external event listeners
 
 
-//filter Eventlistener:
+
+// const commentCreationFunction = destination => {
+//     const commentTextField = document.querySelector(`input[name="comment-text"]`)
+//     let foundUser = findUserByName(state.currentUser)
+//     let comment = commentTextField.value
+//     let commentObject = {user_id: foundUser.id, destination_id: destination.id, content: comment}
+//     commentTextField.value = ""
+//     let commentReturnObject
+//     createComment(commentObject).then(resp => commentReturnObject = [...resp])
+//     console.log('returned from db: ', commentReturnObject)
+//     return commentReturnObject
+// }
+
+
+//--------------------------------------------------event listeners----------------------------------------------------------//
+
+
+//ED filter Eventlistener:
 monthOrPriceFilter.addEventListener('keyup', () => {
     resultList.innerHTML=""
     let filteredDestinations = state.destinations.filter(destination => {
@@ -53,32 +84,83 @@ monthOrPriceFilter.addEventListener('keyup', () => {
     renderDestinations(filteredDestinations)
 })
 
-//sign-up form event listener and current user/email assigner:
+//ED sign-up form event listener and current user/email assigner:
+
 signupForm.addEventListener('submit', event => {
     event.preventDefault()
     state.currentUser = signupName.value
     state.currentUserEmail = signupEmail.value
     console.log(state.currentUser, state.currentUserEmail)
+    state.currentUserObject = findUserByEmail(state.currentUserEmail)
     signupForm.innerHTML = ''
     //checks if the user exists . Welcomes and if not, adds to DB
     loggedinUser = state.allUsers.find(user => user.email.toLowerCase() === state.currentUserEmail.toLowerCase())
-
-    if (loggedinUser) {signupForm.innerText = `Welcome back, ${state.currentUser}`}
-    else {
+    if (loggedinUser){
+        signupForm.innerText = `Welcome back, ${state.currentUser}`
+        favouritesListRender()
+        console.log('current user')
+        window.localStorage.setItem('currentUser', JSON.stringify(loggedinUser))
+    } else {
         signupForm.innerText = `Welcome, ${state.currentUser}`
         addUser(state.currentUser, state.currentUserEmail)
-        }   
+            .then(res=>getAllUsers())
+            .then(res=>state.currentUserObject = findUserByEmail(state.currentUserEmail))
+    }
+    // allow viewing entire page
+    showHide.style.display="block"
 })
 
-//Render Destinations (run upon page load)
+
+// Both - add destination to userDestinations
+const addDestinationToFavourites = (userEmail, destinationName) => {
+    foundDestination = state.destinations.find(dest=> dest.title === destinationName)
+    console.log('found the destination:', foundDestination)
+
+    foundUser = state.allUsers.find(user => user.email === userEmail)
+    console.log('found the user. this is before the post request: ',foundUser)
+
+    postUserDestination(foundUser.id, foundDestination.id)
+        .then(getUserDestinations)
+        .then(userDestinations => {
+            state.allUserDestinations = [...userDestinations]
+            favouritesListRender()})    
+}
+
+
+//argument - currentUser to show all the user's favourites
+const favouritesListRender = () => {
+    //filters only current user's favs:
+    state.currentUserFavourites = state.allUserDestinations.filter(fav => fav.user.email.toLowerCase() === state.currentUserEmail.toLowerCase())
+    // shoves them into the inner HTML:
+    favouritesList.innerHTML=""
+    state.currentUserFavourites.forEach(fav => {
+        console.log(fav)
+        favouritesList.innerHTML += `<li class="favourites-item" data-destination-id="${fav.destination.id}">${fav.destination.title}</li>`
+        let locatedDestination = findDestination(fav.destination.id)
+        favouritesList.innerHTML += `<div class="style-fav-images"><img class='fav-image' src='${locatedDestination.pictures[0].picture_url}'></div>`
+      
+    })    
+}
+
+
+
+
+//ED Render Destinations (run upon page load)
 const renderDestinations = destinations => 
     destinations.forEach(destination => {renderDestination(destination)})
 
 getDestinations()
     .then(destinations => {
         state.destinations = [...destinations]
-        state.renderedDestinations = [...destinations]
         renderDestinations(destinations)})
 
-//Retrieves all users from the db to later confirm
+//ED Retrieves all users from the db to later confirm
 getAllUsers()
+getUserDestinations().then(resp => state.allUserDestinations = [...resp])
+
+// hides data on page except footer and login
+showHide.style.display="none"
+
+
+
+
